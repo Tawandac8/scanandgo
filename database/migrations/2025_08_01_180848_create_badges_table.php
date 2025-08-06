@@ -40,6 +40,9 @@ return new class extends Migration
             $table->bigInteger('country_id')->nullable();
             //online registration
             $table->boolean('is_online_registration')->default(0);
+            //printing
+            $table->boolean('is_printed')->default(0);
+            $table->bigInteger('printed_copies')->nullable();
         });
     }
 

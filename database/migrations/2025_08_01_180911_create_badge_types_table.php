@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->bigInteger('event_id')->nullable();
             $table->bigInteger('sub_event_id')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(1);
         });
     }
 

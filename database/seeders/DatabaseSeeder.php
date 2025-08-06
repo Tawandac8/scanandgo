@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CreateCityCDE::class,
             CreateCityFG::class,
             CreateCityHtoM::class,
+            CreateBadgeTypes::class
         ]);
     }
 }

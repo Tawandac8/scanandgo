@@ -1,0 +1,63 @@
+@media print {
+body{
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    text-transform:uppercase !important;
+    line-height: 1,2em;
+}
+
+h4{
+    margin-block-end: 0;
+    font-size:18px;
+    margin:10px;
+}
+
+.badge-name{
+    font-size: 18px !important;
+}
+}
+
+@media screen {
+    #badge{
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        text-transform:uppercase !important;
+    }
+
+    #badge img{
+        margin-top: 10px;
+    }
+
+    #badge h4{
+        margin-block-end: 0;
+        font-size:18px;
+        margin:10px;
+    }
+
+    #badge p{
+        font-size:12px;
+    }
+
+    #badge span{
+        font-weight:600;
+    }
+    .badge-name{
+        font-size: 18px !important;
+    }
+
+    #print-button-input{
+        margin:30px auto;
+        width:100%;
+        text-align: center;
+
+    }
+
+    #btnPrint{
+        background: rgb(221, 169, 0);
+        margin:0 auto;
+        padding: 15px 20px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        border: none;
+    }
+}
