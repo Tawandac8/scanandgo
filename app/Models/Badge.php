@@ -23,7 +23,9 @@ class Badge extends Model
         'background', //badge design background
         'city_id',
         'country_id',
-        'is_online_registration'
+        'is_online_registration',
+        'is_printed',
+        'printed_copies'
     ];
 
     public function event()

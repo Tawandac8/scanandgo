@@ -9,7 +9,7 @@ Visitors
         <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
           <div class="card mb-3">
             <div class="card-body">
-              <input class="form-control border-info" type="text" name="q" placeholder="Search/Scan Visitor" autofocus>
+              <input onchange="searchVisitor(this.value)" class="form-control border-info" type="text" name="q" placeholder="Search/Scan Visitor" autofocus>
             </div>
           </div>
           <div class="card">
@@ -208,7 +208,7 @@ Visitors
             $.ajax({
                 type: "post",
                 url: "/visitor/print/"+visitorId,
-                data: {'_token':_token,'delegate':delegateId},
+                data: {'_token':_token},
                 success: function (response) {
                     
 
@@ -219,7 +219,7 @@ Visitors
         function startPrint(visitorId){
             printBadge()
             printerDetails(visitorId)
-            window.location.href = '/visitor';
+            
         }
 
         //add visitor
@@ -268,6 +268,30 @@ Visitors
           $('#badge-wrapper').slideUp('fast','swing',function(){
             $('#add-visitor-wrapper').slideDown('fast','swing');
           });  
+        }
+
+        function searchVisitor(q){
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            $('input[name="q"]').val('');
+            $.ajax({
+                type: "post",
+                url: "/visitor/search",
+                data: {'_token':_token,'q':q},
+                success: function (response) {
+                    if(response == 'false'){
+                      alert('Visitor badge not found');
+                      $('#badge-wrapper').slideUp('fast','swing',function(){
+                        $('#add-visitor-wrapper').slideDown('fast','swing');
+                    })
+                    }else{
+                      $('#badge-wrapper').html(response);
+                    $('#add-visitor-wrapper').slideUp('fast','swing',function(){
+                        $('#badge-wrapper').slideDown('fast','swing');
+                    })
+                    }
+                    
+                }
+            });
         }
 </script>
 @endsection

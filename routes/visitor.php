@@ -16,4 +16,7 @@ Route::middleware('auth')->group(function () {
     //view visitor
     Route::post('/visitor/view/{id}',[VisitorController::class,'viewVisitor'])->name('visitor.view');//ajax
 
+    //visitor search
+    Route::post('/visitor/search',[VisitorController::class,'searchVisitor'])->name('visitor.search');
+
 });

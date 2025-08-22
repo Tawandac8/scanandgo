@@ -15,8 +15,6 @@ All Users
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <span onclick="addUser()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add User</span>
-                    
                   </div>
                 </div>
               </div>
@@ -72,7 +70,7 @@ All Users
         <div class="col-lg-4 col-md-6">
           <div id="add-user-wrapper" class="card">
             <div class="card-body pb-0">
-              <h4 class="badge-name">Add User</h4>
+              <h4 class="card-name">Add User</h4>
               <form action="{{ route('users.store') }}" method="post">
                 @csrf
               <label class="required" for="">Name</label>
@@ -118,6 +116,17 @@ All Users
 
 @section('scripts')
 <script>
-  
+  function editUser(id){
+    var _token = $('meta[name="csrf-token"]').attr('content');
+    $.ajax({
+      url:"/admin/user/edit/"+id,
+      method:"GET",
+      data:{'_token':_token},
+      success:function(result){
+        $('#add-user-wrapper .card-body').slideUp('fast','swing');
+        $('#add-user-wrapper').html(result);
+      }
+    });
+  }
 </script>
 @endsection

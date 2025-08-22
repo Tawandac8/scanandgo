@@ -23,3 +23,4 @@ require __DIR__.'/visitor.php';
 require __DIR__.'/conference.php';
 require __DIR__.'/badges.php';
 require __DIR__.'/admin.php';
+require __DIR__.'/exhibitor.php';
