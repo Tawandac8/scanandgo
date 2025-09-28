@@ -2,24 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Exhibitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class ExhibitorController extends Controller
 {
+    function events(){
+        $response = json_decode(Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/get-all-events/'));
+
+            foreach($response[0] as $event){
+                $exhisting_event = Event::where('event_code',$event->event_code)->first();
+
+                if(!$exhisting_event){
+                    Event::create([
+                        'name' => $event->name,
+                        'year' => $event->year,
+                        'start_date' => $event->start_date,
+                        'end_date' => $event->end_date,
+                        'event_code' => $event->event_code,
+                    ]);
+            }else{
+                $exhisting_event->update([
+                    'name' => $event->name,
+                    'year' => $event->year,
+                    'start_date' => $event->start_date,
+                    'end_date' => $event->end_date,
+                ]);
+            }
+        }
+
+        $events = Event::where('start_date','>=',Carbon::now()->format('Y-m-d'))->orderBy('start_date','ASC')->get();
+
+        return view('exhibitors.event', ['events' => $events]);
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($event)
     {
-        $exhibitors = json_decode(Http::withoutVerifying()->acceptJson()->get('http://192.168.0.253/api/v1/exhibitors'));
+        $event = Event::where('id',$event)->first();
 
-        dd($exhibitors);
+        $exhibitors = json_decode(Http::withoutVerifying()->acceptJson()->get('http://www.zitfevents.com/api/v1/exhibitors/'.$event->event_code));
 
-        $exhibitors = Exhibitor::all();
+        foreach($exhibitors[0] as $exhibitor){
+            dd($exhibitor);
+        }
 
-        return view('exhibitors.index', ['exhibitors' => $exhibitors]); 
+        return view('exhibitors.index', ['exhibitors' => $exhibitors]);
     }
 
     /**
