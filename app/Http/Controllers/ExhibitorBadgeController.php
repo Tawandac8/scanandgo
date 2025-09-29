@@ -23,7 +23,7 @@ class ExhibitorBadgeController extends Controller
         $exhibitor_badges = $response->json($key = 'data');
 
         foreach($exhibitor_badges as $badge){
-            
+
             $existing_badge = ExhibitorBadge::where('name',$badge['name'])->where('exhibitor_id',$exhibitor->id)->first();
 
             if(!$existing_badge){
@@ -38,7 +38,9 @@ class ExhibitorBadgeController extends Controller
 
         $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->paginate(25);
 
-        return view('exhibitors.badges',[ 'badges' => $badges, 'exhibitor' => $exhibitor ]);
+        $badge_types = BadgeType::all();
+
+        return view('exhibitors.badges',[ 'badges' => $badges, 'exhibitor' => $exhibitor,'types'=>$badge_types]);
     }
 
     /**
@@ -52,9 +54,18 @@ class ExhibitorBadgeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $exhibitor)
     {
-        //
+
+        $exhibitor = Exhibitor::where('id',$exhibitor)->first();
+
+        ExhibitorBadge::create([
+            'name' => $request->name,
+            'exhibitor_id' => $exhibitor->id,
+            'badge_type_id' => $request->badge_type,
+        ]);
+
+        return redirect()->back()->with('success', 'Badge added successfully.');
     }
 
     /**
@@ -63,12 +74,12 @@ class ExhibitorBadgeController extends Controller
     public function show($badge)
     {
         $badge = ExhibitorBadge::where('id',$badge)->with('exhibitor')->first();
-        
+
         $output = '';
         $output = '<div id="badge" class="card-body pb-0">';
         $output .= '<h4 class="badge-name">'.$badge->name.'</h4>
               <p class="text-sm text-dark">';
-                
+
         $output .= $badge->exhibitor->company_name.'</p>';
         $output .= QrCode::generate('https://www.zitfevents.com/marketplace/scanned-exhibitor/'.$badge->exhibitor->code);
 
@@ -85,7 +96,7 @@ class ExhibitorBadgeController extends Controller
             'is_printed' => true,
             'printed_copies' => $badge->printed_copies + 1
         ]);
-        
+
         }
 
     /**

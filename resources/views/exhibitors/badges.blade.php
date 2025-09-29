@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-All Exhibitors
+{{ $exhibitor->company_name }} Badges
 @endsection
 
 @section('content')
@@ -11,22 +11,14 @@ All Exhibitors
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Business Visitors</h6>
+                  <h6>{{ $exhibitor->company_name }} Badges</h6>
                 </div>
-                @hasanyrole('admin|super-admin')
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <span onclick="" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
-                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-ellipsis-v text-dark"></i>
-                    </a>
-                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Printed Badges</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Synch Badges</a></li>
-                    </ul>
+                    <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
+
                   </div>
                 </div>
-                @endhasanyrole
               </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -35,6 +27,7 @@ All Exhibitors
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Badge Type</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Printed Copies</th>
                       <th></th>
@@ -50,6 +43,9 @@ All Exhibitors
                             <h6 class="mb-0 text-sm">{{ $badge->name }}</h6>
                           </div>
                         </div>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold"> {{ $badge->badge_type->name }} </span>
                       </td>
                       <td>
                         @if($badge->is_printed)
@@ -93,6 +89,26 @@ All Exhibitors
               <span onclick="" class="btn bg-gradient-primary">Print</span>
             </div>
           </div>
+          <div class="card add-exhibitor-badge">
+            <div class="card-body">
+                <form action="{{ route('exhibitor.badge.add',$exhibitor->id) }}" method="post">
+                    @csrf
+                <div class="mb-4">
+                    <label for="">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
+                </div>
+                <div class="mb-4">
+                    <label for="">Badge Type</label>
+                    <select name="badge_type" id="" class="form-select">
+                        @foreach($types as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button class="btn btn-dark w-100">Add Badge</button>
+                </form>
+            </div>
+          </div>
         </div>
 </div>
 @endsection
@@ -128,7 +144,7 @@ All Exhibitors
                 type: 'GET',
                 success: function(response) {
                     $('#badge-wrapper').html(response);
-                    
+
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -139,7 +155,13 @@ All Exhibitors
         function startPrint(id){
             printBadge()
             changePrintStatus(id)
-            
+
+            window.onafterprint = function() {
+        // Reload the page after the print dialog is closed
+        window.location.reload();
+        // The 'true' parameter forces a reload from the server, ignoring the cache.
+    };
+
         }
 
         function changePrintStatus(id){
@@ -152,5 +174,19 @@ All Exhibitors
                 }
             });
         }
+
+        function addBadge(){
+            $('#badge-wrapper').slideUp('fast','swing', function() {
+                $('.add-exhibitor-badge').slideDown('fast');
+            });
+        }
 </script>
+@endsection
+
+@section('styles')
+    <style>
+        .add-exhibitor-badge{
+            display:none;
+        }
+    </style>
 @endsection

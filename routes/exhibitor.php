@@ -16,5 +16,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     //print badge
     Route::get('/exhibitor/badge/print/{badge}',[ExhibitorBadgeController::class,'print']);
 
+    //add badge
+    Route::post('/exhibitor/badge/add/{exhibitor}',[ExhibitorBadgeController::class,'store'])->name('exhibitor.badge.add');
 
 });
