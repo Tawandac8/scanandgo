@@ -10,7 +10,7 @@ class Exhibitor extends Model
     protected $fillable = [
         'company_name',
         'code',
-        'event_id'
+        'event_code'
     ];
 
     public function badges(){

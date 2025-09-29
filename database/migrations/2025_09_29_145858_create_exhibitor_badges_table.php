@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exhibitors', function (Blueprint $table) {
+        Schema::create('exhibitor_badges', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('company_name');
-            $table->boolean('is_local')->nullable();
-            $table->string('code')->nullable();
-            $table->string('event_code');
+            $table->unsignedBigInteger('exhibitor_id');
+            $table->string('name');
+            $table->unsignedBigInteger('badge_type_id');
+            $table->boolean('is_printed')->default(false);
+            $table->integer('printed_copies')->default(0);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exhibitors');
+        Schema::dropIfExists('exhibitor_badges');
     }
 };

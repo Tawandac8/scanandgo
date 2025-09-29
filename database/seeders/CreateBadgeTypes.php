@@ -15,8 +15,15 @@ class CreateBadgeTypes extends Seeder
     {
         $badge_types = [
             'Visitor',
-            'Foreign Exhibitor',
-            'Local Exhibitor',
+            'Exhibitor',
+            'Exhibitor Comp',
+            'Attendant',
+            'Speaker',
+            'Press',
+            'Staff',
+            'Delegate',
+            'VIP',
+            'Sponsor',
         ];
 
         foreach ($badge_types as $badge_type) {

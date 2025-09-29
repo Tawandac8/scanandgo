@@ -52,7 +52,7 @@ All Exhibitors
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm"></h6>
+                            <h6 class="mb-0 text-sm">{{ $exhibitor->company_name }}</h6>
                           </div>
                         </div>
                       </td>
@@ -63,7 +63,7 @@ All Exhibitors
                         <span class="text-xs font-weight-bold">  </span>
                       </td>
                       <td>
-                        <span style="cursor: pointer" onclick="" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
+                        <a href="{{ route('exhibitor.badges.index',$exhibitor->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
                       </td>
                     </tr>
                     @endforeach
@@ -71,6 +71,13 @@ All Exhibitors
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div class="card-footer">
+              <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    {{ $exhibitors->links('components.pagination') }}
+                  </div>
+                </div>
             </div>
           </div>
         </div>

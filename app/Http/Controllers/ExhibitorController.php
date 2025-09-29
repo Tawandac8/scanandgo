@@ -45,13 +45,29 @@ class ExhibitorController extends Controller
     {
         $event = Event::where('id',$event)->first();
 
-        $exhibitors = json_decode(Http::withoutVerifying()->acceptJson()->get('http://www.zitfevents.com/api/v1/exhibitors/'.$event->event_code));
+        $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/exhibitors/'.$event->event_code);
 
-        foreach($exhibitors[0] as $exhibitor){
-            dd($exhibitor);
+        $exhibitors = $response->json($key = 'data');
+        foreach($exhibitors as $exhibitor){
+            
+            $existing_exhibitor = Exhibitor::where('code',$exhibitor['exhibitor_code'])->where('event_code',$event->event_code)->first();
+            
+
+            if(!$existing_exhibitor){
+                Exhibitor::create([
+                    'company_name' => $exhibitor['company_name'],
+                    'code' => $exhibitor['exhibitor_code'],
+                    'event_code' => $event->event_code,
+                ]);
+            }else{
+                $existing_exhibitor->update([
+                    'company_name' => $exhibitor['company_name'],
+                ]);
+            }
         }
+        $all_exhibitors = Exhibitor::where('event_code',$event->event_code)->paginate(30);
 
-        return view('exhibitors.index', ['exhibitors' => $exhibitors]);
+        return view('exhibitors.index', ['exhibitors' => $all_exhibitors]);
     }
 
     /**
