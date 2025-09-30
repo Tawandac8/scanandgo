@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-All Exhibitors
+{{ $event->name.' '.$event->year }} Exhibitors
 @endsection
 
 @section('content')
@@ -9,14 +9,14 @@ All Exhibitors
         <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
           <div class="card mb-3">
             <div class="card-body">
-              <input onchange="searchExhibitor(this.value)" class="form-control border-info" type="text" name="q" placeholder="Search/Scan Visitor" autofocus>
+              <input class="form-control border-info" type="text" name="q" placeholder="Search Exhibitor" autofocus>
             </div>
           </div>
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Business Visitors</h6>
+                  <h6>{{ $event->name.' '.$event->year }} Exhibitors</h6>
                 </div>
                 @hasanyrole('admin|super-admin')
                 <div class="col-lg-6 col-5 my-auto text-end">
@@ -45,7 +45,7 @@ All Exhibitors
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="exhibitor-table">
                     @if(isset($exhibitors))
                     @foreach($exhibitors as $exhibitor)
                     <tr>
@@ -82,4 +82,20 @@ All Exhibitors
           </div>
         </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+  $('input[name="q"]').on('keyup', function(){
+    var query = $(this).val();
+    $.ajax({
+      type: "get",
+      url: "/search/exhibitor",
+      data: {q:query},
+      success: function (response) {
+        $('.exhibitor-table').html(response);
+      }
+    });
+  })
+</script>
 @endsection

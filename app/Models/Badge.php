@@ -13,6 +13,7 @@ class Badge extends Model
         'title',
         'first_name',
         'last_name',
+        'name',
         'company_name',
         'position',
         'email',

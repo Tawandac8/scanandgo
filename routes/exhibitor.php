@@ -10,7 +10,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     //exhibitor list
     Route::get('/{event}/exhibitors',[ExhibitorController::class,'index'])->name('exhibitors.index');
     //exhibitor badges
-    Route::get('/{exhibitor}/badges',[ExhibitorBadgeController::class,'index'])->name('exhibitor.badges.index');
+    Route::get('/exhibitor-badges/{exhibitor}/badges',[ExhibitorBadgeController::class,'index'])->name('exhibitor.badges.index');
     //show badge details and print
     Route::get('/exhibitor/badge/{badge}',[ExhibitorBadgeController::class,'show']);
     //print badge
@@ -18,5 +18,8 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
 
     //add badge
     Route::post('/exhibitor/badge/add/{exhibitor}',[ExhibitorBadgeController::class,'store'])->name('exhibitor.badge.add');
+
+    //search exhibitor
+    Route::get('/search/exhibitor',[ExhibitorController::class,'search'])->name('search.exhibitor');
 
 });

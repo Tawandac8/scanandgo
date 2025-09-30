@@ -24,6 +24,8 @@ class CreateBadgeTypes extends Seeder
             'Delegate',
             'VIP',
             'Sponsor',
+            'Judge',
+            'Service Provider',
         ];
 
         foreach ($badge_types as $badge_type) {

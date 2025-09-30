@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->string('name')->nullable();
             //company information
             $table->string('company_name')->nullable();
             $table->string('position')->nullable();

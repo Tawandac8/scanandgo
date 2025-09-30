@@ -47,7 +47,7 @@ All Events
                         <span class="text-xs font-weight-bold"> 0 </span>
                       </td>
                       <td>
-                        <a href="{{ route('exhibitors.index',$event->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="{{ route('badges.index',$event->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
                       </td>
                     </tr>
                     @endforeach

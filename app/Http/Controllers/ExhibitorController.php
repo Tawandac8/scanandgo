@@ -67,7 +67,7 @@ class ExhibitorController extends Controller
         }
         $all_exhibitors = Exhibitor::where('event_code',$event->event_code)->paginate(30);
 
-        return view('exhibitors.index', ['exhibitors' => $all_exhibitors]);
+        return view('exhibitors.index', ['exhibitors' => $all_exhibitors,'event'=>$event]);
     }
 
     /**
@@ -116,5 +116,35 @@ class ExhibitorController extends Controller
     public function destroy(Exhibitor $exhibitor)
     {
         //
+    }
+
+    //search exhibitor
+    public function search(Request $request){
+        $q = $request->q;
+        $exhibitors = Exhibitor::where('company_name','like','%'.$q.'%')->paginate(25);
+        
+        $output = '';
+
+        foreach($exhibitors as $exhibitor){
+            $output .= '<tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">'.$exhibitor->company_name.'</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">  </span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold">  </span>
+                      </td>
+                      <td>
+                        <a href="'.route('exhibitor.badges.index',$exhibitor->id) .'" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
+                      </td>
+                    </tr>';
+        }
+        return $output;
     }
 }
