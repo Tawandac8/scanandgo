@@ -18,12 +18,6 @@ class DatabaseSeeder extends Seeder
         // Create roles and permissions
         $this->call([
             CreateUserSeeder::class,
-            CreateCity::class,
-            CreateCityA::class,
-            CreateCityB::class,
-            CreateCityCDE::class,
-            CreateCityFG::class,
-            CreateCityHtoM::class,
             CreateBadgeTypes::class
         ]);
     }
