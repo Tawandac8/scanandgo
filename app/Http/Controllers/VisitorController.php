@@ -187,4 +187,14 @@ class VisitorController extends Controller
 
         return view('visitors.events', ['events' => $events]);
     }
+
+    function deleteEventVisitors($event){
+        $event = Event::where('id',$event)->first();
+
+        $badge_type = BadgeType::where('name','Visitor')->first();
+
+        Badge::where('event_id',$event->id)->where('badge_type_id',$badge_type->id)->delete();
+
+        return redirect()->back()->with('success', 'All visitors for '.$event->name.' have been deleted successfully.');
+    }
 }

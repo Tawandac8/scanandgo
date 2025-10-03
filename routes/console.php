@@ -26,7 +26,7 @@ Schedule::call(function () {
             $badge_type = BadgeType::where('name','Visitor')->first();
 
             foreach($badges as $badge){
-                $badge_exists = Badge::where('badge_type_id',$badge_type->id)->where('reg_code',$badge['registration_code'])->first();
+                $badge_exists = Badge::where('reg_code',$badge['registration_code'])->first();
                 
                 if($badge_exists) continue;
                         

@@ -23,3 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/visitor/search',[VisitorController::class,'searchVisitor'])->name('visitor.search');
 
 });
+
+Route::group(['middleware' => ['role:admin|super-admin']], function () { 
+    //delete all visitors of an event
+    Route::get('/delete/event/visitors/{event}',[VisitorController::class,'deleteEventVisitors'])->name('delete.event.visitors');
+});
