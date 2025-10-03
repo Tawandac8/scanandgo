@@ -22,8 +22,8 @@ class Badge extends Model
         'badge_type_id',
         'profile', //profile picture
         'background', //badge design background
-        'city_id',
-        'country_id',
+        'city',
+        'country',
         'is_online_registration',
         'is_printed',
         'printed_copies'

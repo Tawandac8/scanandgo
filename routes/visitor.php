@@ -5,7 +5,10 @@ use App\Http\Controllers\VisitorController;
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/business-visitors',[VisitorController::class,'index'])->name('business.visitors');
+    //all events
+    Route::get('/visitors/events',[VisitorController::class,'visitorsEvents'])->name('events.visitors');
+
+    Route::get('/business-visitors/{event}',[VisitorController::class,'index'])->name('business.visitors');
 
     //visitor badge printing
     Route::post('/visitor/print/{id}',[VisitorController::class,'print'])->name('visitor.print');//ajax

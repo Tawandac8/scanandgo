@@ -72,4 +72,9 @@ class Event extends Model
     public function users(){
         return $this->hasMany(User::class);
     }
+
+    public function getAllVisitors(){
+        $visitor_badge = BadgeType::where('name','Visitor')->first();
+        return $this->badges()->where('badge_type_id',$visitor_badge->id)->count();
+    }
 }

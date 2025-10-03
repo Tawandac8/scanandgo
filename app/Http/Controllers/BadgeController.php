@@ -41,6 +41,8 @@ class BadgeController extends Controller
 
         return view('otherBadges.events', ['events' => $events]);
     }
+
+    
     /**
      * Display a listing of the resource.
      */

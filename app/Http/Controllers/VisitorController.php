@@ -8,6 +8,9 @@ use App\Models\Country;
 use App\Models\Badge;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Models\Event;
+use Carbon\Carbon;
 
 class VisitorController extends Controller
 {
@@ -22,26 +25,17 @@ class VisitorController extends Controller
      * @return \Illuminate\View\View
      */
 
-    function index(){
-        //get countries
-        $countries = Country::orderBy('name', 'asc')->get();
-        //get all visitors from badge type visitor
+    function index($event){
+        $event = Event::where('id',$event)->first();
 
-        $visitor_badge = BadgeType::where('name', 'Visitor')->with('badges')->first();
-        if(empty($visitor_badge)){
-            return view('visitors.index',['countries'=>$countries]);
-        }
+             $badge_type = BadgeType::where('name','Visitor')->first();
 
-        $role = Auth::user()->getRoleNames()[0];
 
-        if($role == 'super-admin' || $role == 'admin'){
-            $visitors = Badge::where('badge_type_id', $visitor_badge->id)->with('country')->get();
-            return view('visitors.index',['visitors'=>$visitors,'countries'=>$countries]);
-        }
+            $visitors = Badge::where('event_id',$event->id)->where('badge_type_id',$badge_type->id)->orderBy('created_at','desc')->paginate(30);
 
-        $visitors = Badge::where('event_id', Auth::user()->event_id)->where('badge_type_id', $visitor_badge->id)->with('country')->get();
+            $countries = Country::all();
         
-        return view('visitors.index',['visitors'=>$visitors,'countries'=>$countries]);
+        return view('visitors.index',['visitors'=>$visitors,'countries'=>$countries,'event'=>$event]);
     }
 
     function print($id){
@@ -159,5 +153,34 @@ class VisitorController extends Controller
         }
 
         return 'false';
+    }
+
+    function visitorsEvents(){
+        $response = json_decode(Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/get-all-events/'));
+
+            foreach($response[0] as $event){
+                $exhisting_event = Event::where('event_code',$event->event_code)->first();
+
+                if(!$exhisting_event){
+                    Event::create([
+                        'name' => $event->name,
+                        'year' => $event->year,
+                        'start_date' => $event->start_date,
+                        'end_date' => $event->end_date,
+                        'event_code' => $event->event_code,
+                    ]);
+            }else{
+                $exhisting_event->update([
+                    'name' => $event->name,
+                    'year' => $event->year,
+                    'start_date' => $event->start_date,
+                    'end_date' => $event->end_date,
+                ]);
+            }
+        }
+
+        $events = Event::where('start_date','>=',Carbon::now()->format('Y-m-d'))->orderBy('start_date','ASC')->get();
+
+        return view('visitors.events', ['events' => $events]);
     }
 }

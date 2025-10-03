@@ -113,9 +113,11 @@ class ExhibitorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Exhibitor $exhibitor)
+    public function destroy($exhibitor)
     {
-        //
+        $exhibitor = Exhibitor::where('id',$exhibitor)->first();
+        $exhibitor->delete();
+        return back();
     }
 
     //search exhibitor

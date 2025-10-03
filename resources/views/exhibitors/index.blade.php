@@ -39,8 +39,12 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
+                      @role('super-admin')
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exhibitor</th>
+                      @endrole
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed Badges</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">exhibitor Code</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Badges</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remaining Badges</th>
                       <th></th>
                     </tr>
@@ -50,11 +54,17 @@
                     @foreach($exhibitors as $exhibitor)
                     <tr>
                       <td>
+                        <span class="text-xs font-weight-bold"> {{ $exhibitor->created_at }} </span>
+                      </td>
+                      <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{ $exhibitor->company_name }}</h6>
                           </div>
                         </div>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold"> {{ $exhibitor->code }} </span>
                       </td>
                       <td>
                         <span class="text-xs font-weight-bold">  </span>
@@ -64,6 +74,9 @@
                       </td>
                       <td>
                         <a href="{{ route('exhibitor.badges.index',$exhibitor->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
+                        @role('super-admin')
+                        <a href="{{ route('exhibitor.delete',$exhibitor->id) }}" class="badge badge-sm bg-gradient-danger">delete <i class="fa-solid fa-arrow-right"></i></a>
+                        @endrole
                       </td>
                     </tr>
                     @endforeach

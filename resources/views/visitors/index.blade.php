@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-Visitors
+{{ $event->name.' '.$event->year }} Visitors
 @endsection
 
 @section('content')
@@ -77,6 +77,13 @@ Visitors
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div class="card-footer">
+              <div class="col-lg-12 col-12 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    {{ $visitors->links('components.pagination') }}
+                  </div>
+                </div>
             </div>
           </div>
         </div>
