@@ -40,7 +40,11 @@ class VisitorController extends Controller
 
     function print($id){
         $visitor = Badge::where('id', $id)->first();
-
+        //update printed date
+        if($visitor->is_printed == 0){
+            $visitor->printed_date = Carbon::now();
+        }
+        
         $visitor->is_printed = 1;
         $visitor->printed_copies++;
         $visitor->save();

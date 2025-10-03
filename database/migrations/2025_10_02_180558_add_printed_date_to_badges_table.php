@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('badges', function (Blueprint $table) {
-            $table->date('printed_date')->nullable();
+            $table->dateTime('printed_date')->nullable();
         });
     }
 
