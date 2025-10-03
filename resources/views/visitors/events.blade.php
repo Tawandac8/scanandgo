@@ -49,7 +49,7 @@ All Events
                       <td>
                         <a href="{{ route('business.visitors',$event->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
                         @role('super-admin')
-                        <a href="{{ route('delete.event.visitors',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete <i class="fa-solid fa-arrow-right"></i></a>
+                        {{-- <a href="{{ route('delete.event.visitors',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete <i class="fa-solid fa-arrow-right"></i></a> --}}
                         @endrole
                       </td>
                     </tr>
