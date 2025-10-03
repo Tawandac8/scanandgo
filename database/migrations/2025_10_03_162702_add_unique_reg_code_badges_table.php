@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('badges', function (Blueprint $table) {
             $table->dropColumn('reg_code');
-            $table->string('reg_code')->unique();
         });
     }
 
