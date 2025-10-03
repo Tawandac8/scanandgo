@@ -10,7 +10,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     //exhibitor list
     Route::get('/{event}/exhibitors',[ExhibitorController::class,'index'])->name('exhibitors.index');
     //delete exhibitor
-    Route::get('/exhibitor/delete/{id}',[ExhibitorController::class,'destroy'])->name('exhibitor.destroy.duplicate');
+    Route::get('/exhibitor-duplicate/delete/{id}',[ExhibitorController::class,'destroy'])->name('exhibitor.destroy.duplicate');
     //add exhibitor
     //exhibitor badges
     Route::get('/exhibitor-badges/{exhibitor}/badges',[ExhibitorBadgeController::class,'index'])->name('exhibitor.badges.index');
