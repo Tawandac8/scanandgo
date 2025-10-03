@@ -28,8 +28,7 @@ Schedule::call(function () {
             foreach($badges as $badge){
                 $badge_exists = Badge::where('reg_code',$badge['registration_code'])->first();
                 
-                if($badge_exists) continue;
-                        
+                if(!$badge_exists){
                         Badge::create([
                             'badge_type' => $badge_type->name,
                             'badge_type_id' => $badge_type->id,
@@ -47,6 +46,7 @@ Schedule::call(function () {
                             'country' => isset($badge['profile']['country'])? $badge['profile']['country']['name']:'',
                             'email' => $badge['profile']['user'] ? $badge['profile']['user']['email'] : ''
                         ]);
+                    }
             }
         }
         })->everyMinute();
