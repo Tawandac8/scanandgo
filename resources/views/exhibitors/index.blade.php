@@ -43,9 +43,7 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exhibitor</th>
                       @endrole
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company Name</th>
-                      @role('super-admin')
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">exhibitor Code</th>
-                      @endrole
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Badges</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remaining Badges</th>
                       <th></th>
@@ -69,7 +67,7 @@
                       <td>
                         <span class="text-xs font-weight-bold"> {{ $exhibitor->code }} </span>
                       </td>
-                      @endrole
+                      
                       <td>
                         <span class="text-xs font-weight-bold">  </span>
                       </td>
