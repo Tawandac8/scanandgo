@@ -11,6 +11,7 @@ class SubEvent extends Model
         'name',
         'start_date',
         'end_date',
+        'year'
     ];
 
     public function event()
@@ -23,6 +24,12 @@ class SubEvent extends Model
         return $this->start_date->format('Y-m-d');
     }
 
+    /**
+     * Get the end date of the sub event in Y-m-d format.
+     * If the end date is not set, returns null.
+     *
+     * @return string|null
+     */
     public function getFormattedEndDateAttribute()
     {
         return $this->end_date ? $this->end_date->format('Y-m-d') : null;
