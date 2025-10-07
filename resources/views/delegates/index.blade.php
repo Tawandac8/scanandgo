@@ -7,6 +7,11 @@
 @section('content')
 <div class="row my-4">
         <div class="col-lg-8 col-md-12 mb-md-0 mb-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                  <input class="form-control border-info" type="text" name="q" placeholder="Search Delegate" autofocus>
+                </div>
+            </div>
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
@@ -15,7 +20,7 @@
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
+                    {{-- <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span> --}}
 
                   </div>
                 </div>
@@ -34,7 +39,7 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="delegates-table">
                     @if(isset($badges))
                     @foreach($badges as $badge)
                     <tr>
@@ -199,13 +204,30 @@
                 }
             });
         }
-</script>
-@endsection
 
-@section('styles')
-    <style>
-        .add-exhibitor-badge{
-            display:none;
-        }
-    </style>
+        //search delegates
+        $('input[name="q"]').on('keyup', function(){
+            var query = $(this).val();
+            var event_id = {{ $event->id }};
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            
+            $.ajax({
+                url: '/delegates/search',
+                type: 'POST',
+                data: {
+                    query: query,
+                    event_id: event_id,
+                    _token: _token
+                },
+                success: function(response) {
+                    //update table body
+                    console.log(response);
+                    $('.delegates-table').html(response);
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+</script>
 @endsection

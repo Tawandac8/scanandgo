@@ -131,6 +131,61 @@ class SubEventController extends Controller
             return view('delegates.index', ['badges' => $badges, 'event' => $event]);
     }
 
+/**
+ * Search for delegates based on the given query string.
+ *
+ * @param Request $request
+ * @return mixed
+ */
+    function search_delegates(Request $request){
+        //get delegate badge type
+        $delegate_badge = BadgeType::where('name','Delegate')->first();
+
+        $event = SubEvent::where('id',$request->get('event_id'))->first();
+       
+        return $request->query;
+        //search delegates
+        $badges = Badge::where('sub_event_id',$event->id)->where('badge_type_id',$delegate_badge->id)->where('name','like','%'.$request->query.'%')->get();
+        return $badges;
+
+        $output = '';
+
+        foreach($badges as $badge){
+
+            $output .= '<tr>
+                <td>
+                    <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">'.$badge->name.'}}</h6>
+                        </div>
+                    </div>
+                </td>
+                    <td>
+                        <span class="text-xs font-weight-bold">'.$badge->company_name.'</span>
+                    </td>
+                    <td>
+                        <span class="text-xs font-weight-bold">'.$badge->badge_type->name.'</span>
+                    </td>
+                    <td>';
+                    if($badge->is_printed){
+                         $output .= '<span class="badge badge-sm bg-gradient-success">Yes</span>';
+                    }else{
+                        $ouput .= '<span class="badge badge-sm bg-gradient-danger">No</span>';
+                    }
+
+            $output .= '</td>
+                <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold"> {{ $badge->printed_copies }} </span>
+                </td>
+                <td>
+                    <span onclick="viewBadge({{ $badge->id }})" style="cursor: pointer" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
+                </td>
+            </tr>';
+                        
+        }
+
+        return $output;
+    }
     /**
      * Show the form for editing the specified resource.
      */

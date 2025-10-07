@@ -26,7 +26,10 @@ class Badge extends Model
         'country',
         'is_online_registration',
         'is_printed',
-        'printed_copies'
+        'printed_copies',
+        'printed_date',
+        'receipt_number',
+        'user_id'
     ];
 
     public function event()

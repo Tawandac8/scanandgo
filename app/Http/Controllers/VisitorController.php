@@ -136,27 +136,68 @@ class VisitorController extends Controller
      * The badge also has a print button which triggers the startPrint function when clicked.
      */
     function searchVisitor(Request $request){
-        $visitor = Badge::where('reg_code', $request->q)->first();
-        if($visitor){
+
+            $visitor = Badge::where('reg_code', $request->q)->first();
+            if($visitor){
             $output = '';
-        $output = '<div id="badge" class="card-body pb-0">';
-        $output .= '<h4 class="badge-name">'.$visitor->title.' '.$visitor->first_name.' '.$visitor->last_name.'</h4>
-              <p class="text-sm text-dark">';
-              if($visitor->position){
+            $output = '<div id="badge" class="card-body pb-0">';
+            $output .= '<h4 class="badge-name">'.$visitor->title.' '.$visitor->first_name.' '.$visitor->last_name.'</h4>
+                <p class="text-sm text-dark">';
+                if($visitor->position){
                 $output .= $visitor->position.' <br>';
-              }
+                }
                 
-        $output .= $visitor->company_name.'</p>';
-        $output .= QrCode::generate($visitor->reg_code);
+            $output .= $visitor->company_name.'</p>';
+            $output .= QrCode::generate($visitor->reg_code);
 
-        $output .= '</div><div class="card-footer">
-              <span onclick="startPrint('.$visitor->id.')" class="btn bg-gradient-primary">Print</span>
-            </div>';
+            $output .= '</div><div class="card-footer">
+                <span onclick="startPrint('.$visitor->id.')" class="btn bg-gradient-primary">Print</span>
+                </div>';
 
-        return $output;
+            return $output;
         }
 
         return 'false';
+    }
+
+    function searchVisitorName(Request $request){
+        $visitors = Badge::where('name', 'like', '%'.$request->name.'%')->get();
+        
+        $output = '';
+
+        foreach($visitors as $visitor){
+            $output .= '<tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">'.$visitor->name.'</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">'.$visitor->company_name.'</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold">'.$visitor->position.'</span>
+                      </td>
+                      <td class="text-center">';
+
+                        if(!$visitor->is_printed){
+                            $output .= '<span class="text-xs font-weight-bold text-danger"> <i class="fa-solid fa-xmark"></i> </span>';
+                        }else{
+                            $output .= '<span class="text-xs font-weight-bold text-success"> <i class="fa-solid fa-check"></i> </span>';
+                        }
+
+                      $output .= '</td>
+                      <td>
+                        <span style="cursor: pointer" onclick="viewVisitor('. $visitor->id .')" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
+                      </td>
+                    </tr>';
+        }
+
+        
+
+        return $output;
     }
 
     function visitorsEvents(){

@@ -11,4 +11,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
 
     //delegates
     Route::get('/delegates/conference/{event}',[SubEventController::class,'show'])->name('event.conference.delegates');
+
+    //delegate search
+    Route::post('/delegates/search',[SubEventController::class,'search_delegates']);
 });

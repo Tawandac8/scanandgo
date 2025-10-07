@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function () {
     //visitor search
     Route::post('/visitor/search',[VisitorController::class,'searchVisitor'])->name('visitor.search');
 
+    //visitor name search
+    Route::get('/visitor/name/search',[VisitorController::class,'searchVisitorName'])->name('visitor.name.search');
+
 });
 
 Route::group(['middleware' => ['role:admin|super-admin']], function () { 

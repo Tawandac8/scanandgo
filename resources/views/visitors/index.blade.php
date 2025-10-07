@@ -9,7 +9,19 @@
         <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
           <div class="card mb-3">
             <div class="card-body">
-              <input onchange="searchVisitor(this.value)" class="form-control border-info" type="text" name="q" placeholder="Search/Scan Visitor" autofocus>
+              <div class="row">
+                <div class="col-md-8">
+                  <input onchange="searchVisitor(this.value)" class="form-control border-info search-by-qr" type="text" name="q" placeholder="Search/Scan Visitor" autofocus>
+                  <input  class="form-control border-info search-by-name" type="text" name="name" placeholder="Enter Visitor Name">
+                </div>
+                <div class="col-md-4">
+                  <select onchange="searchBy(this.value)" class="form-select" name="search_by" id="">
+                    <option value="qr" selected>Scan Code/Search Code</option>
+                    <option value="name">Search By Name</option>
+                  </select>
+                </div>
+              </div>
+              
             </div>
           </div>
           <div class="card">
@@ -44,7 +56,7 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="visitors-table">
                     @if(isset($visitors))
                     @foreach($visitors as $visitor)
                     <tr>
@@ -277,6 +289,16 @@
           });  
         }
 
+        function searchBy(val){
+            if(val == 'name'){
+                $('.search-by-name').show();
+                $('.search-by-qr').hide();
+            }else{
+                $('.search-by-name').hide();
+                $('.search-by-qr').show();
+            }
+        }
+
         function searchVisitor(q){
             var _token = $('meta[name="csrf-token"]').attr('content');
             $('input[name="q"]').val('');
@@ -300,12 +322,30 @@
                 }
             });
         }
+
+        $('input[name="name"]').on('keyup',function(){
+            var name = $(this).val();
+            
+            $.ajax({
+                type: "get",
+                url: "/visitor/name/search/",
+                data: {'name':name},
+                success: function (response) {
+                  console.log(response);
+                    $('.visitors-table').html(response);
+                }
+            });
+        })
 </script>
 @endsection
 
 @section('styles')
 <style>
   #badge-wrapper{
+    display: none;
+  }
+
+  .search-by-name{
     display: none;
   }
 </style>
