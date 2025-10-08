@@ -42,7 +42,7 @@
                   <tbody class="delegates-table">
                     @if(isset($badges))
                     @foreach($badges as $badge)
-                    @if(!$badge->is_printed)
+                    @if($badge->is_printed)
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
