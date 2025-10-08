@@ -44,6 +44,8 @@ class VisitorController extends Controller
         if($visitor->is_printed == 0){
             $visitor->printed_date = Carbon::now();
         }
+
+        $visitor->user_id = Auth::user()->id;
         
         $visitor->is_printed = 1;
         $visitor->printed_copies++;
@@ -73,7 +75,8 @@ class VisitorController extends Controller
             'position'=>$request->position,
             'email'=>$request->email,
             'phone'=>$request->phone,
-            'country_id'=>$request->country
+            'country_id'=>$request->country,
+            'receipt_number'=>$request->receipt
         ]);
 
         $output = '';

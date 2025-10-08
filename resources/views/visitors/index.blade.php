@@ -115,6 +115,10 @@
           <div id="add-visitor-wrapper" class="card">
             <div class="card-body pb-0">
               <h4 class="badge-name">Add Visitor</h4>
+              <label class="required" for="">Receipt Number</label>
+              <div class="mb-3">
+                <input name="receipt" type="text" class="form-control" required>
+              </div>
               <label for="">Title</label>
               <div class="mb-3">
                 <select name="title" class="form-select" id="">
@@ -244,6 +248,7 @@
         //add visitor
         function addVisitor(){
             var _token = $('meta[name="csrf-token"]').attr('content');
+            var receipt = $('input[name="receipt"]').val();
             var title = $('select[name="title"]').val();
             var first_name = $('input[name="first_name"]').val();
             var last_name = $('input[name="last_name"]').val();
@@ -258,7 +263,7 @@
                 data: {'_token':_token,'title':title,
                 'first_name':first_name,'last_name':last_name,
                 'position':position,'company':company,
-                'email':email,'phone':phone,'country':country},
+                'email':email,'phone':phone,'country':country,'receipt':receipt},
                 success: function (response) {
                     $('#badge-wrapper').html(response);
                     $('#add-visitor-wrapper').slideUp('fast','swing',function(){
