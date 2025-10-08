@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Models\Badge;
 use App\Models\BadgeType;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BadgeExport;
 
 class SubEventController extends Controller
 {
@@ -143,7 +145,6 @@ class SubEventController extends Controller
 
         $event = SubEvent::where('id',$request->get('event_id'))->first();
        
-        return $request->query;
         //search delegates
         $badges = Badge::where('sub_event_id',$event->id)->where('badge_type_id',$delegate_badge->id)->where('name','like','%'.$request->query.'%')->get();
         return $badges;
@@ -208,5 +209,11 @@ class SubEventController extends Controller
     public function destroy(SubEvent $subEvent)
     {
         //
+    }
+
+    public function export($id){
+        $event = SubEvent::where('id', $id)->first();
+        
+        return Excel::download(new BadgeExport($event), 'delegates.xlsx');
     }
 }
