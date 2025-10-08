@@ -117,7 +117,7 @@
               <h4 class="badge-name">Add Visitor</h4>
               <label class="required" for="">Receipt Number</label>
               <div class="mb-3">
-                <input name="receipt" type="text" class="form-control" required>
+                <input name="receipt" type="text" class="form-control">
               </div>
               <label for="">Title</label>
               <div class="mb-3">
