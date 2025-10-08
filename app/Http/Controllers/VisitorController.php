@@ -42,7 +42,7 @@ class VisitorController extends Controller
         $visitor = Badge::where('id', $id)->first();
         //update printed date
         if($visitor->is_printed == 0){
-            $visitor->printed_date = Carbon::now();
+            $visitor->printed_date = Carbon::now()->format('Y-m-d');
         }
 
         $visitor->user_id = Auth::user()->id;

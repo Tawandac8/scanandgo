@@ -54,10 +54,8 @@ class ReportController extends Controller
 
         for($i = 0; $i <= $number_of_days; $i++){
             $date = $start_date->addDays($i);
-
-            array_push($badges, [$date->format('Y-m-d') => Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('is_printed', 1)->count()]);
+            array_push($badges, [$date->format('Y-m-d') => Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('printed_date', $date->format('Y-m-d'))->count()]);
         }
-
         return view('reports.report', ['event' => $event, 'badges' => $badges]);
 
     }

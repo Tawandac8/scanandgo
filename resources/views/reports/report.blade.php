@@ -34,3 +34,13 @@
     @endforeach
           </div>
 @endsection
+
+@section('scripts')
+          <script>
+            $(document).ready(function() {
+            setInterval(function() {
+                location.reload();
+                }, 15000); // 15000 milliseconds = 15 seconds
+            });
+          </script>
+@endsection
