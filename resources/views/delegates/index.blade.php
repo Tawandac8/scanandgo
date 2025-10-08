@@ -42,7 +42,7 @@
                   <tbody class="delegates-table">
                     @if(isset($badges))
                     @foreach($badges as $badge)
-                    {{-- @if($badge->is_printed) --}}
+                    @if($badge->is_printed == 0)
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
@@ -71,7 +71,7 @@
                         <span onclick="viewBadge({{ $badge->id }})" style="cursor: pointer" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
                       </td>
                     </tr>
-                    {{-- @endif --}}
+                    @endif
                     @endforeach
                     @endif
                   </tbody>
