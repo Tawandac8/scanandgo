@@ -36,7 +36,7 @@ class ReportController extends Controller
             }
         }
 
-        $events = Event::where('start_date','>=',Carbon::now()->format('Y-m-d'))->orderBy('start_date','ASC')->get();
+        $events = Event::orderBy('start_date','ASC')->get();
 
         return view('reports.events', ['events' => $events]);
     }
