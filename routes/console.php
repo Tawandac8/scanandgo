@@ -15,7 +15,7 @@ Artisan::command('inspire', function () {
 
 
 Schedule::call(function () {
-        $events = Event::where('start_date','>=',Carbon::now()->format('Y-m-d'))->get();
+        $events = Event::where('end_date','>=',Carbon::now()->format('Y-m-d'))->get();
 
         //$badges = VisitorBadge::where('event_id',$event->current_event_id)->where('online',0)->orderBy('created_at','asc')->paginate(30);
         foreach($events as $event){
