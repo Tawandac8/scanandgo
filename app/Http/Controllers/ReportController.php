@@ -52,7 +52,7 @@ class ReportController extends Controller
         $end_date = Carbon::parse($event->end_date);
         $number_of_days = $start_date->diffInDays($end_date);
 
-        $total_visitors = Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('is_printed', 1)->count();
+        $total_visitors = Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('is_printed', 1)->where('printed_date','>=', $start_date->format('Y-m-d'))->count();
 
         for($i = 0; $i <= $number_of_days; $i++){
             $date = $start_date->addDays($i);
