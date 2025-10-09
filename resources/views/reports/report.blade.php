@@ -8,7 +8,7 @@
 <div class="row">
   <div class="col-lg-3 col-md-3 col-12 mt-4 mt-md-0">
               <div class="card">
-                <span class="mask bg-dark opacity-10 border-radius-lg"></span>
+                <span class="mask bg-gradient-primary opacity-10 border-radius-lg"></span>
                 <div class="card-body p-3 position-relative">
                   <div class="row">
                     <div class="col-8 text-start">
@@ -22,7 +22,7 @@
                     <div class="col-4">
                       <div class="dropstart text-end mb-6">
                       </div>
-                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0"></p>
+                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Total Visitors</p>
                     </div>
                   </div>
                 </div>
