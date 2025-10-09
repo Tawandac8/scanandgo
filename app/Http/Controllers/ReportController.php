@@ -36,7 +36,7 @@ class ReportController extends Controller
             }
         }
 
-        $events = Event::orderBy('start_date','ASC')->get();
+        $events = Event::orderBy('year','DESC')->get();
 
         return view('reports.events', ['events' => $events]);
     }
