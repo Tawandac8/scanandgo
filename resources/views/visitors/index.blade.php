@@ -123,14 +123,14 @@
               <div class="mb-3">
                 <select name="title" class="form-select" id="">
                   <option value="" selected disabled>Select Title</option>
-                  <option value="Amb">Amb</option>
-                  <option value="Capt">Capt</option>
+                  <option value="Amb">Ambassador</option>
+                  <option value="Capt">Captain</option>
                   <option value="Col">Col</option>
-                  <option value="Dr">Dr</option>
-                  <option value="Eng">Eng</option>
-                  <option value="Gen">Gen</option>
-                  <option value="Hon">Hon</option>
-                  <option value="H.E">H.E</option>
+                  <option value="Dr">Doctor</option>
+                  <option value="Eng">Engineer</option>
+                  <option value="Gen">General</option>
+                  <option value="Hon">Honourable</option>
+                  <option value="H.E">His Excellency</option>
                   <option value="Lt">Lt</option>
                   <option value="Major">Major</option>
                   <option value="Mr">Mr</option>
@@ -138,7 +138,7 @@
                   <option value="Miss">Miss</option>
                   <option value="Ms">Ms</option>
                   <option value="Pres">Pres</option>
-                  <option value="Prof">Prof</option>
+                  <option value="Prof">Professor</option>
                   <option value="Rev">Rev</option>
                   <option value="">None of the above</option>
                 </select>
