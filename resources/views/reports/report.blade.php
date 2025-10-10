@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+<h4>Visitor Report</h4>
+<hr>
 <div class="row">
   <div class="col-lg-3 col-md-3 col-12 mt-4 mt-md-0">
               <div class="card">
@@ -55,6 +57,44 @@
             @endforeach
     @endforeach
           </div>
+      <div class="row my-4">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>{{ count($countries) }} Countries</h6>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($countries as $country)
+                  <tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ $country }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
 
 @section('scripts')
