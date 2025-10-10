@@ -62,6 +62,10 @@ class ReportController extends Controller
         }
         //visitors by country
         foreach($all_visitors as $visitor){
+            if($visitor->country == null || $visitor->country == ''){
+                continue;
+            }
+            
             if(!in_array($visitor->country, $countries)){
                 array_push($countries, $visitor->country);
             }
