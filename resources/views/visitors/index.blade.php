@@ -16,8 +16,9 @@
                 </div>
                 <div class="col-md-4">
                   <select onchange="searchBy(this.value)" class="form-select" name="search_by" id="">
-                    <option value="qr" selected>Scan Code/Search Code</option>
-                    <option value="name">Search By Name</option>
+                    <option value="name" selected>Search By Name</option>
+                    <option value="qr">Scan Code/Search Code</option>
+                    
                   </select>
                 </div>
               </div>
@@ -537,7 +538,8 @@
                   $('#edit-visitor-wrapper input[name="email"]').val(response['email']);
                   $('#edit-visitor-wrapper input[name="phone"]').val(response['phone']);
                   $('#edit-visitor-wrapper select[name="country"]').val(response['country_id']);
-                  
+                    $('#add-visitor-wrapper').hide();
+                    $('#badge-wrapper').hide();
                     $('#edit-visitor-wrapper').show();
                 }
             });
@@ -547,15 +549,16 @@
 
 @section('styles')
 <style>
-  #badge-wrapper{
-    display: none;
-  }
 
-  .search-by-name{
+  .search-by-qr{
     display: none;
   }
 
   #add-visitor-wrapper{
+    display: none;
+  }
+
+  #edit-visitor-wrapper{
     display: none;
   }
 </style>
