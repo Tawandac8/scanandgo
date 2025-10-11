@@ -227,18 +227,18 @@ class VisitorController extends Controller
             }
         }
 
-        $events = Event::where('end_date','>=',Carbon::now()->format('Y-m-d'))->orderBy('start_date','ASC')->get();
+        $events = Event::where('end_date','>=',Carbon::now()->addDays(10)->format('Y-m-d'))->orderBy('start_date','ASC')->get();
 
         return view('visitors.events', ['events' => $events]);
     }
 
-    function deleteEventVisitors($event){
-        $event = Event::where('id',$event)->first();
+    // function deleteEventVisitors($event){
+    //     $event = Event::where('id',$event)->first();
 
-        $badge_type = BadgeType::where('name','Visitor')->first();
+    //     $badge_type = BadgeType::where('name','Visitor')->first();
 
-        Badge::where('event_id',$event->id)->where('badge_type_id',$badge_type->id)->delete();
+    //     Badge::where('event_id',$event->id)->where('badge_type_id',$badge_type->id)->delete();
 
-        return redirect()->back()->with('success', 'All visitors for '.$event->name.' have been deleted successfully.');
-    }
+    //     return redirect()->back()->with('success', 'All visitors for '.$event->name.' have been deleted successfully.');
+    // }
 }

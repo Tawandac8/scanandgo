@@ -25,3 +25,4 @@ require __DIR__.'/badges.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/exhibitor.php';
 require __DIR__.'/reports.php';
+require __DIR__.'/reports.php';
