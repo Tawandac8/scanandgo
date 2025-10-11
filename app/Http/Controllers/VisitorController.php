@@ -75,7 +75,7 @@ class VisitorController extends Controller
             'position'=>$request->position,
             'email'=>$request->email,
             'phone'=>$request->phone,
-            'country_id'=>$request->country,
+            'country'=>$request->country,
             'receipt_number'=>$request->receipt
         ]);
 
@@ -155,6 +155,7 @@ class VisitorController extends Controller
 
             $output .= '</div><div class="card-footer">
                 <span onclick="startPrint('.$visitor->id.')" class="btn bg-gradient-primary">Print</span>
+                
                 </div>';
 
             return $output;
@@ -164,7 +165,7 @@ class VisitorController extends Controller
     }
 
     function searchVisitorName(Request $request){
-        $visitors = Badge::where('name', 'like', '%'.$request->name.'%')->get();
+        $visitors = Badge::where('first_name', 'like', '%'.$request->name.'%')->orWhere('last_name', 'like', '%'.$request->name.'%')->get();
         
         $output = '';
 
@@ -173,7 +174,7 @@ class VisitorController extends Controller
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">'.$visitor->name.'</h6>
+                            <h6 class="mb-0 text-sm">'.$visitor->title.' '.$visitor->first_name.' '.$visitor->last_name.'</h6>
                           </div>
                         </div>
                       </td>
@@ -193,7 +194,8 @@ class VisitorController extends Controller
 
                       $output .= '</td>
                       <td>
-                        <span style="cursor: pointer" onclick="viewVisitor('. $visitor->id .')" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
+                        
+                        <span style="cursor:pointer" onclick="editVisitor('.$visitor->id.')" class="badge badge-sm bg-gradient-warning">Edit Visitor</span>
                       </td>
                     </tr>';
         }
@@ -201,6 +203,34 @@ class VisitorController extends Controller
         
 
         return $output;
+    }
+
+    function editVisitor($id){
+        $visitor = Badge::where('id', $id)->first();
+
+        return response()->json($visitor);
+    }
+
+    function updateVisitor(Request $request, $id){
+        $visitor = Badge::where('id', $id)->first();
+
+        $visitor->update([
+            'title'=>$request->title,
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'company_name'=>$request->company,
+            'position'=>$request->position,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
+            'country'=>$request->country,
+            'receipt_number'=>$request->receipt,
+            'industry' => $request->industry,
+            'purpose' => $request->purpose,
+            'info_source' => $request->info_source,
+            'product_group' => $request->product_group
+        ]);
+
+        return redirect()->back()->with('success', 'Visitor updated successfully');
     }
 
     function visitorsEvents(){

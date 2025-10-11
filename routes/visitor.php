@@ -16,6 +16,12 @@ Route::middleware('auth')->group(function () {
     //add visitor
     Route::post('/visitor/add',[VisitorController::class,'addVisitor'])->name('visitor.add');
 
+    //edit visitor
+    Route::post('/visitor/edit/{id}',[VisitorController::class,'editVisitor'])->name('visitor.edit');
+
+    //update visitor
+    Route::post('/visitor/update/{id}',[VisitorController::class,'updateVisitor'])->name('visitor.update');
+
     //view visitor
     Route::post('/visitor/view/{id}',[VisitorController::class,'viewVisitor'])->name('visitor.view');//ajax
 

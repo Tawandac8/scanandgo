@@ -29,7 +29,11 @@ class Badge extends Model
         'printed_copies',
         'printed_date',
         'receipt_number',
-        'user_id'
+        'user_id',
+        'industry',
+        'purpose',
+        'info_source',
+        'product_group'
     ];
 
     public function event()

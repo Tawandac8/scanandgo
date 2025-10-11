@@ -197,6 +197,184 @@
               <span onclick="addVisitor()" class="btn bg-gradient-dark w-100">Add Visitor</span>
             </div>
           </div>
+          <div id="edit-visitor-wrapper" class="card">
+            <form action="" method="post">
+              @csrf
+              <div class="card-body pb-0">
+              <h4 class="badge-name">Edit Visitor</h4>
+              <label class="required" for="">Receipt Number</label>
+              <div class="mb-3">
+                <input name="receipt" type="text" class="form-control">
+              </div>
+              <label for="">Title</label>
+              <div class="mb-3">
+                <select name="title" class="form-select" id="">
+                  <option value="" selected disabled>Select Title</option>
+                  <option value="Amb">Ambassador</option>
+                  <option value="Capt">Captain</option>
+                  <option value="Col">Col</option>
+                  <option value="Dr">Doctor</option>
+                  <option value="Eng">Engineer</option>
+                  <option value="Gen">General</option>
+                  <option value="Hon">Honourable</option>
+                  <option value="H.E">His Excellency</option>
+                  <option value="Lt">Lt</option>
+                  <option value="Major">Major</option>
+                  <option value="Mr">Mr</option>
+                  <option value="Mrs">Mrs</option>
+                  <option value="Miss">Miss</option>
+                  <option value="Ms">Ms</option>
+                  <option value="Pres">Pres</option>
+                  <option value="Prof">Professor</option>
+                  <option value="Rev">Rev</option>
+                  <option value="">None of the above</option>
+                </select>
+              </div>
+              <label class="required" for="">First Name</label>
+              <div class="mb-3">
+                <input name="first_name" type="text" class="form-control" required>
+              </div>
+              <label class="required" for="">Last Name</label>
+              <div class="mb-3">
+                <input name="last_name" type="text" class="form-control" required>
+              </div>
+              <label for="" class="required">Position/Level</label>
+              <div class="mb-3">
+                <select name="position" id="" class="form-select" required>
+                  <option value="" selected disabled>Select Position</option>
+                  <option value="CEO">CEO</option>
+                  <option value="CFO">CFO</option>
+                  <option value="CMO">CMO</option>
+                  <option value="COO">COO</option>
+                  <option value="CTO">CTO</option>
+                  <option value="ICT">ICT</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Procurement">Procurement</option>
+                  <option value="Project Manager">Project Manager</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Security">Security</option>
+                  <option value="Self">Self Employed</option>
+                  <option value="Self">Student</option>
+                  <option value="">None of the above</option>
+                </select>
+              </div>
+              <label for="">Institution <span class="text-muted">(Company/School)</span></label>
+              <div class="mb-3">
+                <input name="company" type="text" class="form-control">
+              </div>
+              <label for="" class="required">Email</label>
+              <div class="mb-3">
+                <input name="email" type="email" class="form-control" required>
+              </div>
+              <label for="" class="required">Phone</label>
+              <div class="mb-3">
+                <input name="phone" type="text" class="form-control" required>
+              </div>
+              <label for="" class="required">Country</label>
+              <div class="mb-3">
+                <select name="country" id="" class="form-select" required>
+                  @foreach ($countries as $country)
+                  <option value="{{ $country->name }}">{{ $country->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+                            <label for="exampleSelectBorder">To which industry does your company belong?</label>
+                            <div class="mb-3">
+                            <select name="industry" class="form-select" id="exampleSelectBorder">
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Automotive,Transport & Logistics">Automotive,Transport & Logistics</option>
+                                <option value="Banking, Insurance & Financial Services">Banking, Insurance & Financial Services</option>
+                                <option value="Building & Construction">Building & Construction</option>
+                                <option value="Chemicals & Pharmaceuticals">Chemicals & Pharmaceuticals</option>
+                                <option value="Clothing & Textiles">Clothing & Textiles</option>
+                                <option value="Education & Training">Education & Training</option>
+                                <option value="FMCG">FMCG</option>
+                                <option value="Food & Baverage Processing">Food & Baverage Processing</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Health Services">Health Services</option>
+                                <option value="ICT & Telecommunications">ICT & Telecommunications</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Mining & Engineering">Mining & Engineering</option>
+                                <option value="Printing &packaging">Printing &packaging</option>
+                                <option value="Social Services">Social Services</option>
+                                <option value="Tourism & Leisure">Tourism & Leisure</option>
+                                <option value="Non Governmental Organisations">Non Governmental Organisations</option>
+                                <option value="Research & Training">Research & Training</option>
+                                <option value="Local Authority">Local Authority</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            </div>
+                            
+                            <label for="" class="form-label form-label-required">What is the purpose of your visit?</label>
+                            <div class="mb-3">
+                            <select id="purpose" name="purpose" class="form-select">
+                                <option value="Check out competition">Check out competition</option>
+                                <option value="Contact existing suppliers and buyers">Contact existing suppliers and buyers</option>
+                                <option value="Gather general market/Product information">Gather general market/Product information</option>
+                                <option value="Look for new ideas">Look for new ideas</option>
+                                <option value="Identify new distributors/Agents/Partners">Identify new distributors/Agents/Partners</option>
+                                <option value="Place purchasing order">Place purchasing order</option>
+                                <option value="Place purchasing order">Seek solutions for special requirements</option>
+                                <option value="Place purchasing order">Identify Investment Opportunities</option>
+                                <option value="Place purchasing order">Seek research fields & partners</option>
+                                <option value="Place purchasing order">Attend conference</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="form-label form-label-required">How did you learn about this expo?
+                            </label>
+                            <select name="info_source" class="form-control">
+                                <option value="Direct Mail/Invitation from an exhibitor">Direct Mail/Invitation from an exhibitor</option>
+                                <option value="Direct Mail/Invitation from organizers">Direct Mail/Invitation from organizers</option>
+                                <option value="Google Ads">Google Ads</option>
+                                <option value="Youtube">Youtube</option>
+                                <option value="Twitter">Twitter</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Linkedin">Linkedin</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Print Advertisement">Print Advertisement</option>
+                                <option value="Radio Advert">Radio Advert</option>
+                                <option value="Television Advert">Television Advert</option>
+                                <option value="Trade / Business associatio">Trade / Business association</option>
+                                <option value="Word of mouth">Word of mouth</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                            <label for="" class="form-label form-label-required">Which product group(s) are you interested in?
+                            </label>
+                            <div class="mb-3">
+                            <select name="product_group" class="form-control">
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Automotive/Transport">Automotive/Transport</option>
+                                <option value="Building & Construction">Building & Construction</option>
+                                <option value="Chemicals/Pharmaceuticals">Chemicals/Pharmaceuticals</option>
+                                <option value="Clothing & Textiles">Clothing & Textiles</option>
+                                <option value="Consumer Goods">Consumer Goods</option>
+
+                                <option value="Education & Training">Education & Training</option>
+                                <option value="Food & Beverage Processing">Food & Beverage Processing</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="ICT & Telecommunications">ICT & Telecommunications</option>
+                                <option value="Light & Heavy">Light & Heavy</option>
+                                <option value="Industrial Goods">Industrial Goods</option>
+                                <option value="Mining & Engineering">Mining & Engineering</option>
+                                <option value="Printing & Packaging">Printing & Packaging</option>
+                                <option value="Service Organizations">Service Organizations</option>
+                                <option value="Socials Services">Socials Services</option>
+                                <option value="Toursm & Leisure">Toursm & Leisure</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+              
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn bg-gradient-dark w-100">Update Visitor</button>
+            </div>
+            </form>
+            
+          </div>
         </div>
       </div>
 @endsection
@@ -336,11 +514,34 @@
                 url: "/visitor/name/search/",
                 data: {'name':name},
                 success: function (response) {
-                  console.log(response);
                     $('.visitors-table').html(response);
                 }
             });
         })
+
+        function editVisitor(id){
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: "post",
+                url: "/visitor/edit/"+id,
+                data: {'_token':_token},
+                success: function (response) {
+                  console.log(response);
+                  $('#edit-visitor-wrapper form').attr('action','/visitor/update/'+id);
+                  $('#edit-visitor-wrapper input[name="receipt"]').val(response['receipt_number']);
+                  $('#edit-visitor-wrapper select[name="title"]').val(response['title']);
+                  $('#edit-visitor-wrapper input[name="first_name"]').val(response['first_name']);
+                  $('#edit-visitor-wrapper input[name="last_name"]').val(response['last_name']);
+                  $('#edit-visitor-wrapper select[name="position"]').val(response['position']);
+                  $('#edit-visitor-wrapper input[name="company"]').val(response['company_name']);
+                  $('#edit-visitor-wrapper input[name="email"]').val(response['email']);
+                  $('#edit-visitor-wrapper input[name="phone"]').val(response['phone']);
+                  $('#edit-visitor-wrapper select[name="country"]').val(response['country_id']);
+                  
+                    $('#edit-visitor-wrapper').show();
+                }
+            });
+        }
 </script>
 @endsection
 
@@ -351,6 +552,10 @@
   }
 
   .search-by-name{
+    display: none;
+  }
+
+  #add-visitor-wrapper{
     display: none;
   }
 </style>
