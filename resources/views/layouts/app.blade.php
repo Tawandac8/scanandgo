@@ -62,6 +62,7 @@
 
 <body class="g-sidenav-show  bg-gray-100">
   @include('components.sidebar')
+  
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
@@ -102,6 +103,20 @@
       </div>
     </nav>
     <!-- End Navbar -->
+    <div class="container-fluid">
+          @if (session('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span class="alert-text text-white">{{ session('success') }}</span>
+          </div>
+          @endif
+          @if ($errors->any())
+          @foreach ($errors->all() as $error)
+          <div class="alert alert-danger" role="alert">
+            <span class="alert-text text-white">{{ $error }}</span>
+          </div>
+          @endforeach
+          @endif
+        </div>
     <div class="container-fluid py-4">
       @yield('content')
       @include('layouts.footer')

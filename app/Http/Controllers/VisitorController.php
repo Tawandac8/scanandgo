@@ -213,7 +213,6 @@ class VisitorController extends Controller
 
     function updateVisitor(Request $request, $id){
         $visitor = Badge::where('id', $id)->first();
-
         $visitor->update([
             'title'=>$request->title,
             'first_name'=>$request->first_name,

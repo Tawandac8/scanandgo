@@ -537,7 +537,7 @@
                   $('#edit-visitor-wrapper input[name="company"]').val(response['company_name']);
                   $('#edit-visitor-wrapper input[name="email"]').val(response['email']);
                   $('#edit-visitor-wrapper input[name="phone"]').val(response['phone']);
-                  $('#edit-visitor-wrapper select[name="country"]').val(response['country_id']);
+                  $('#edit-visitor-wrapper select[name="country"]').val(response['country']);
                     $('#add-visitor-wrapper').hide();
                     $('#badge-wrapper').hide();
                     $('#edit-visitor-wrapper').show();
