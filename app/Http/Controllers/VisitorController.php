@@ -227,7 +227,7 @@ class VisitorController extends Controller
             }
         }
 
-        $events = Event::where('end_date','>=',Carbon::now()->addDays(10)->format('Y-m-d'))->orderBy('start_date','ASC')->get();
+        $events = Event::orderBy('start_date','ASC')->get();
 
         return view('visitors.events', ['events' => $events]);
     }
