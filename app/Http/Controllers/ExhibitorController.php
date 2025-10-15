@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Exhibitor;
+use App\Models\ExhibitorBadge;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ExhibitorController extends Controller
 {
@@ -148,5 +150,34 @@ class ExhibitorController extends Controller
                     </tr>';
         }
         return $output;
+    }
+
+    function printedBadges($event){
+        $event = Event::where('id',$event)->first();
+
+        $printedBadges = [];
+
+        $exhibitors = Exhibitor::where('event_code',$event->event_code)->get();
+        foreach($exhibitors as $exhibitor){
+            $exhibitorBadges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->where('is_printed',1)->get();
+            
+            foreach($exhibitorBadges as $badge){
+                $printedBadges[] = $badge;
+            }
+        }
+
+        // Paginate the array
+    $page = request()->get('page', 1);
+    $perPage = 30;
+    $offset = ($page - 1) * $perPage;
+    $paginatedBadges = new LengthAwarePaginator(
+        array_slice($printedBadges, $offset, $perPage),
+        count($printedBadges),
+        $perPage,
+        $page,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+        return view('exhibitors.printed', ['badges' => $paginatedBadges,'event'=>$event]);
     }
 }

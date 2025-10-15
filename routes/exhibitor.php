@@ -25,4 +25,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     //search exhibitor
     Route::get('/search/exhibitor',[ExhibitorController::class,'search'])->name('search.exhibitor');
 
+    //get printed badges
+    Route::get('/printed-badges/{event}',[ExhibitorController::class,'printedBadges'])->name('printed.badges');
+
 });

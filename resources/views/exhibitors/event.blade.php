@@ -48,6 +48,9 @@ All Events
                       </td>
                       <td>
                         <a href="{{ route('exhibitors.index',$event->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
+                        @hasanyrole('super-admin')
+                        <a href="{{ route('printed.badges',$event->id)}}" class="badge badge-sm bg-gradient-warning">Printed <i class="fa-solid fa-arrow-right"></i></a>
+                        @endhasanyrole
                       </td>
                     </tr>
                     @endforeach
