@@ -5,6 +5,30 @@
 @endsection
 
 @section('content')
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-3 col-12 mt-4 mt-md-0">
+              <div class="card">
+                <span class="mask bg-gradient-primary opacity-10 border-radius-lg"></span>
+                <div class="card-body p-3 position-relative">
+                  <div class="row">
+                    <div class="col-8 text-start">
+                      <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                        <i class="fa-solid fa-person-walking-luggage"></i>
+                      </div>
+                      <h5 class="text-white font-weight-bolder mb-0 mt-3">
+                        {{ count($all_badges) }}
+                      </h5>
+                    </div>
+                    <div class="col-4">
+                      <div class="dropstart text-end mb-6">
+                      </div>
+                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Printed Exhibitor Badges</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+</div>
 <div class="row my-4">
         <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
           <div class="card">
@@ -15,7 +39,6 @@
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
 
                   </div>
                 </div>

@@ -178,6 +178,6 @@ class ExhibitorController extends Controller
         ['path' => request()->url(), 'query' => request()->query()]
     );
 
-        return view('exhibitors.printed', ['badges' => $paginatedBadges,'event'=>$event]);
+        return view('exhibitors.printed', ['badges' => $paginatedBadges,'all_badges'=>$printedBadges,'event'=>$event]);
     }
 }
