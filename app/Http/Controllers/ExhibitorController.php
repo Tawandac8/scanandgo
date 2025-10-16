@@ -156,6 +156,9 @@ class ExhibitorController extends Controller
         $event = Event::where('id',$event)->first();
 
         $printedBadges = [];
+        $exhibitorBadges = [];
+        $exhibitorComp = [];
+        $attendant = [];
 
         $exhibitors = Exhibitor::where('event_code',$event->event_code)->get();
         foreach($exhibitors as $exhibitor){
@@ -163,6 +166,16 @@ class ExhibitorController extends Controller
             
             foreach($exhibitorBadges as $badge){
                 $printedBadges[] = $badge;
+
+                if($badge->badge_type->name == 'Exhibitor'){
+                    $exhibitorComp[] = $badge;
+                }
+                if($badge->badge_type->name == 'Attendant'){
+                    $attendant[] = $badge;
+                }
+                if($badge->badge_type->name == 'Exhibitor Comp'){
+                    $exhibitorComp[] = $badge;
+                }
             }
         }
 
@@ -178,6 +191,6 @@ class ExhibitorController extends Controller
         ['path' => request()->url(), 'query' => request()->query()]
     );
 
-        return view('exhibitors.printed', ['badges' => $paginatedBadges,'all_badges'=>$printedBadges,'event'=>$event]);
+        return view('exhibitors.printed', ['badges' => $paginatedBadges,'all_badges'=>$printedBadges,'event'=>$event,'comp'=>$exhibitorComp,'attendant'=>$attendant,'exhibitorBadges'=>$exhibitorBadges]);
     }
 }

@@ -13,6 +13,11 @@ class Exhibitor extends Model
         'event_code'
     ];
 
+    /**
+     * Get the badges associated with the exhibitor.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function badges(){
         return $this->hasMany(Badge::class);
     }
