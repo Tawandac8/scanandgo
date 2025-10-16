@@ -168,7 +168,7 @@ class ExhibitorController extends Controller
                 $printedBadges[] = $badge;
 
                 if($badge->badge_type->name == 'Exhibitor'){
-                    $exhibitorComp[] = $badge;
+                    $exhibitorBadges[] = $badge;
                 }
                 if($badge->badge_type->name == 'Attendant'){
                     $attendant[] = $badge;

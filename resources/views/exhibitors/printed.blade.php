@@ -44,7 +44,7 @@
                     <div class="col-4">
                       <div class="dropstart text-end mb-6">
                       </div>
-                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Total Badges</p>
+                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Exhibitor Badges</p>
                     </div>
                   </div>
                 </div>
@@ -66,7 +66,7 @@
                     <div class="col-4">
                       <div class="dropstart text-end mb-6">
                       </div>
-                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Total Badges</p>
+                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Comp Badges</p>
                     </div>
                   </div>
                 </div>
@@ -88,7 +88,7 @@
                     <div class="col-4">
                       <div class="dropstart text-end mb-6">
                       </div>
-                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Total Badges</p>
+                      <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">Attendant Badges</p>
                     </div>
                   </div>
                 </div>
