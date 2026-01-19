@@ -54,6 +54,7 @@ class ReportController extends Controller
         $number_of_days = $start_date->diffInDays($end_date);
 
         $total_visitors = Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('is_printed', 1)->where('printed_date','>=', $start_date->format('Y-m-d'))->count();
+
         $all_visitors = Badge::where('event_id', $event->id)->where('badge_type_id', $visitor_badge->id)->where('is_printed', 1)->where('printed_date','>=', $start_date->format('Y-m-d'))->get();
         //visitors by date
         for($i = 0;$i <= $number_of_days; $i++){
@@ -65,13 +66,16 @@ class ReportController extends Controller
             if($visitor->country == null || $visitor->country == ''){
                 continue;
             }
-            
+
             if(!in_array($visitor->country, $countries)){
                 array_push($countries, $visitor->country);
             }
         }
-        
-        return view('reports.report', ['event' => $event, 'badges' => $badges,'total_visitors'=>$total_visitors,'countries'=>$countries]);
+
+        //other badges
+        $all_other_badges = BadgeType::where('id','!=',$visitor_badge->id)->get();
+
+        return view('reports.report', ['event' => $event, 'badges' => $badges,'total_visitors'=>$total_visitors,'countries'=>$countries,'otherBadges'=>$all_other_badges]);
 
     }
 }
