@@ -61,4 +61,4 @@ Schedule::call(function () {
                     }
             }
         }
-        })->everyMinute();
+        })->everyTwoMinutes();
