@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'skylon' => [
+        'api_key' => env('SKYLON_API_KEY'),
+    ],
+
 ];

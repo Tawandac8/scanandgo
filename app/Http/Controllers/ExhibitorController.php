@@ -13,28 +13,28 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class ExhibitorController extends Controller
 {
     function events(){
-        // $response = json_decode(Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/get-all-events/'));
+        $response = json_decode(Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/get-all-events/'));
 
-        //     foreach($response[0] as $event){
-        //         $exhisting_event = Event::where('event_code',$event->event_code)->first();
+            foreach($response[0] as $event){
+                $exhisting_event = Event::where('event_code',$event->event_code)->first();
 
-        //         if(!$exhisting_event){
-        //             Event::create([
-        //                 'name' => $event->name,
-        //                 'year' => $event->year,
-        //                 'start_date' => $event->start_date,
-        //                 'end_date' => $event->end_date,
-        //                 'event_code' => $event->event_code,
-        //             ]);
-        //     }else{
-        //         $exhisting_event->update([
-        //             'name' => $event->name,
-        //             'year' => $event->year,
-        //             'start_date' => $event->start_date,
-        //             'end_date' => $event->end_date,
-        //         ]);
-        //     }
-        // }
+                if(!$exhisting_event){
+                    Event::create([
+                        'name' => $event->name,
+                        'year' => $event->year,
+                        'start_date' => $event->start_date,
+                        'end_date' => $event->end_date,
+                        'event_code' => $event->event_code,
+                    ]);
+            }else{
+                $exhisting_event->update([
+                    'name' => $event->name,
+                    'year' => $event->year,
+                    'start_date' => $event->start_date,
+                    'end_date' => $event->end_date,
+                ]);
+            }
+        }
 
         $events = Event::orderBy('start_date','DESC')->get();
 
@@ -46,27 +46,6 @@ class ExhibitorController extends Controller
     public function index($event)
     {
         $event = Event::where('id',$event)->first();
-
-        $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/exhibitors/'.$event->event_code);
-
-        $exhibitors = $response->json($key = 'data');
-        foreach($exhibitors as $exhibitor){
-            
-            $existing_exhibitor = Exhibitor::where('code',$exhibitor['exhibitor_code'])->where('event_code',$event->event_code)->first();
-            
-
-            if(!$existing_exhibitor){
-                Exhibitor::create([
-                    'company_name' => $exhibitor['company_name'],
-                    'code' => $exhibitor['exhibitor_code'],
-                    'event_code' => $event->event_code,
-                ]);
-            }else{
-                $existing_exhibitor->update([
-                    'company_name' => $exhibitor['company_name'],
-                ]);
-            }
-        }
         $all_exhibitors = Exhibitor::where('event_code',$event->event_code)->paginate(30);
 
         return view('exhibitors.index', ['exhibitors' => $all_exhibitors,'event'=>$event]);

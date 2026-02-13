@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Schedule;
 use App\Models\Badge;
 use App\Models\BadgeType;
 use App\Models\Event;
+use App\Models\Exhibitor;
+use App\Models\ExhibitorBadge;
 use Carbon\Carbon;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-
+//Visitors Badges
 Schedule::call(function () {
         $events = Event::where('end_date','>=',Carbon::now()->format('Y-m-d'))->get();
 
@@ -62,3 +64,60 @@ Schedule::call(function () {
             }
         }
         })->everyTwoMinutes();
+
+//Exhibitor Badges
+Schedule::call(function(){
+    $events = Event::all();
+
+    foreach ($events as $event) {
+        $api_key = config('services.skylon.api_key');
+        $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitors/'.$event->event_code);
+        
+        $exhibitors = $response->json();
+        //loop through exhibitors
+        foreach($exhibitors as $exhibitor){
+            //check if exhibitor exists
+            $exhibitor_exists = Exhibitor::where('code',$exhibitor['exhibitor_code'])->first();
+            //if not, create exhibitor
+            if(!$exhibitor_exists){
+                Exhibitor::create([
+                    'code' => $exhibitor['exhibitor_code'],
+                    'company_name' => $exhibitor['company_name'],
+                    'event_code' => $event->event_code
+                ]);
+                
+            }else{
+                $exhibitor_exists->update([
+                    'company_name' => $exhibitor['company_name']
+                ]);
+            } 
+        }
+    }
+})->everyTwoMinutes();
+
+//Exhibitor Badges from skylon
+Schedule::call(function(){
+    //get events from current year
+    $events = Event::whereYear('start_date', date('Y'))->get();
+    $api_key = config('services.skylon.api_key');
+    foreach ($events as $event) {
+        foreach($event->exhibitors as $exhibitor){
+            $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitor-badges/'.$exhibitor->code);
+            
+            $exhibitor_badges = $response->json();
+            //loop through exhibitor badges
+            foreach($exhibitor_badges as $exhibitor_badge){
+            //check if exhibitor badge exists
+            $exhibitor_badge_exists = ExhibitorBadge::where('name',$exhibitor_badge['name'])->where('exhibitor_id',$exhibitor_badge['exhibitor_id'])->first();
+            //if not, create exhibitor badge
+            if(!$exhibitor_badge_exists){
+                ExhibitorBadge::create([
+                    'name' => $exhibitor_badge['name'],
+                    'exhibitor_id' => $exhibitor_badge['exhibitor_id'],
+                    'badge_type_id' => $exhibitor_badge['badge_type_id'],
+                ]);
+            }
+        }
+    }
+    }
+});
