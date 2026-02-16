@@ -28,7 +28,7 @@ class ExhibitorBadgeController extends Controller
                 //get badge type id
                 $badge_type_id = BadgeType::where('name',$exhibitor_badge['badge_type']['name'])->first()->id;
             //check if exhibitor badge exists
-            $exhibitor_badge_exists = ExhibitorBadge::where('batch_number',$exhibitor_badge['batch_number'])->where('exhibitor_id',$exhibitor_badge['exhibitor_id'])->first();
+            $exhibitor_badge_exists = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->where('batch_number',$exhibitor_badge['batch_number'])->first();
             //if not, create exhibitor badge
             if(!$exhibitor_badge_exists){
                 ExhibitorBadge::create([
