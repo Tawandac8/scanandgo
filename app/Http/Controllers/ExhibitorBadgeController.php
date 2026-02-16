@@ -18,6 +18,11 @@ class ExhibitorBadgeController extends Controller
     {
         $exhibitor = Exhibitor::where('id', $exhibitor)->first();
 
+        $api_key = config('services.skylon.api_key');
+
+        $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitor-badges/'.$exhibitor->code);
+            dd($response);
+
         $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->paginate(25);
 
         $badge_types = BadgeType::all();
