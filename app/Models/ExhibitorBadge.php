@@ -11,7 +11,8 @@ class ExhibitorBadge extends Model
         'name',
         'badge_type_id',
         'is_printed',
-        'printed_copies'
+        'printed_copies',
+        'batch_number'
     ];
 
 
