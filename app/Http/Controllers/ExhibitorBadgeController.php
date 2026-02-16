@@ -17,6 +17,33 @@ class ExhibitorBadgeController extends Controller
     public function index($exhibitor)
     {
         $exhibitor = Exhibitor::where('id', $exhibitor)->first();
+        
+        //
+        $api_key = config('services.skylon.api_key');
+        $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitor-badges/'.$exhibitor->code);
+            
+            $exhibitor_badges = $response->json();
+            //loop through exhibitor badges
+            foreach($exhibitor_badges as $exhibitor_badge){
+                //get badge type id
+                $badge_type_id = BadgeType::where('name',$exhibitor_badge['badge_type']['name'])->first()->id;
+            //check if exhibitor badge exists
+            $exhibitor_badge_exists = ExhibitorBadge::where('batch_number',$exhibitor_badge['batch_number'])->where('exhibitor_id',$exhibitor_badge['exhibitor_id'])->first();
+            //if not, create exhibitor badge
+            if(!$exhibitor_badge_exists){
+                ExhibitorBadge::create([
+                    'name' => $exhibitor_badge['name'],
+                    'exhibitor_id' => $exhibitor->id,
+                    'badge_type_id' => $badge_type_id,
+                    'batch_number' => $exhibitor_badge['batch_number'],
+                ]);
+            }else{
+                $exhibitor_badge_exists->update([
+                    'name' => $exhibitor_badge['name']
+                ]);
+            }
+        }
+        //
         $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->paginate(25);
         dd($badges);
         $badge_types = BadgeType::all();
