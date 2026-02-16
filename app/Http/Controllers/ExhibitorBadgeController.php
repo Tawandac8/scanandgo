@@ -18,7 +18,7 @@ class ExhibitorBadgeController extends Controller
     {
         $exhibitor = Exhibitor::where('id', $exhibitor)->first();
         $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->paginate(25);
-
+        dd($badges);
         $badge_types = BadgeType::all();
 
         return view('exhibitors.badges',[ 'badges' => $badges, 'exhibitor' => $exhibitor,'types'=>$badge_types]);
