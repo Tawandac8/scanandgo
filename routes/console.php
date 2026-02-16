@@ -115,6 +115,7 @@ Schedule::call(function(){
                     'name' => $exhibitor_badge['name'],
                     'exhibitor_id' => $exhibitor_badge['exhibitor_id'],
                     'badge_type_id' => $exhibitor_badge['badge_type_id'],
+                    'batch_number' => $exhibitor_badge['batch_number'],
                 ]);
             }
         }
