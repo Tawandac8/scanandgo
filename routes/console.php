@@ -115,7 +115,7 @@ Schedule::call(function(){
             if(!$exhibitor_badge_exists){
                 ExhibitorBadge::create([
                     'name' => $exhibitor_badge['name'],
-                    'exhibitor_id' => $exhibitor_badge['exhibitor_id'],
+                    'exhibitor_id' => $exhibitor->id,
                     'badge_type_id' => $badge_type_id,
                     'batch_number' => $exhibitor_badge['batch_number'],
                 ]);
