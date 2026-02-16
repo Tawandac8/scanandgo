@@ -107,15 +107,21 @@ Schedule::call(function(){
             $exhibitor_badges = $response->json();
             //loop through exhibitor badges
             foreach($exhibitor_badges as $exhibitor_badge){
+                //get badge type id
+                $badge_type_id = BadgeType::where('name',$exhibitor_badge['badge_type']['name'])->first()->id;
             //check if exhibitor badge exists
-            $exhibitor_badge_exists = ExhibitorBadge::where('name',$exhibitor_badge['name'])->where('exhibitor_id',$exhibitor_badge['exhibitor_id'])->first();
+            $exhibitor_badge_exists = ExhibitorBadge::where('batch_number',$exhibitor_badge['batch_number'])->where('exhibitor_id',$exhibitor_badge['exhibitor_id'])->first();
             //if not, create exhibitor badge
             if(!$exhibitor_badge_exists){
                 ExhibitorBadge::create([
                     'name' => $exhibitor_badge['name'],
                     'exhibitor_id' => $exhibitor_badge['exhibitor_id'],
-                    'badge_type_id' => $exhibitor_badge['badge_type_id'],
+                    'badge_type_id' => $badge_type_id,
                     'batch_number' => $exhibitor_badge['batch_number'],
+                ]);
+            }else{
+                $exhibitor_badge_exists->update([
+                    'name' => $exhibitor_badge['name']
                 ]);
             }
         }
