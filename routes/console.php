@@ -121,4 +121,4 @@ Schedule::call(function(){
         }
     }
     }
-});
+})->everyMinute();
