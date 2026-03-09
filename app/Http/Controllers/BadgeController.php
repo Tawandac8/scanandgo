@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\BadgeType;
-
+use Illuminate\Support\Facades\Auth;
 
 class BadgeController extends Controller
 {
@@ -147,7 +147,9 @@ class BadgeController extends Controller
         $badge = Badge::where('id',$badge)->first();
         $badge->update([
             'is_printed' => 1,
-            'printed_copies' => $badge->printed_copies + 1
+            'printed_copies' => $badge->printed_copies + 1,
+            'printed_by' => Auth::user()->name,
+            'printed_date' => Carbon::now()->format('Y-m-d')
         ]);
     }
 

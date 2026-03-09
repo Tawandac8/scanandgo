@@ -9,6 +9,7 @@ use App\Models\BadgeType;
 use App\Models\Event;
 use App\Models\Exhibitor;
 use App\Models\ExhibitorBadge;
+use App\Models\SubEvent;
 use Carbon\Carbon;
 
 Artisan::command('inspire', function () {

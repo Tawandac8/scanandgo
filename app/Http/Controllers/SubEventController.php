@@ -49,24 +49,37 @@ class SubEventController extends Controller
     {
         $event = Event::where('event_code', $event)->first();
 
-        $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/concurrent-events/'.$event->event_code);
-
-        $concurrent_events = $response->json($key = 'data');
-
-        foreach($concurrent_events as $concurrent_event){
-            $event_exists = SubEvent::where('name',$concurrent_event['name'])->where('year', $concurrent_event['event']['year'])->first();
-
-            if($event_exists) continue;
-            
-            SubEvent::create([
-                'name' => $concurrent_event['name'],
-                'year' => $event->year,
-                'start_date' => ($concurrent_event['multiday_event'])? $concurrent_event['start_date'] : $concurrent_event['date'],
-                'end_date' => ($concurrent_event['multiday_event'])? $concurrent_event['end_date'] : null,
-                'year' => $concurrent_event['event']['year'],
-                'event_id' => $event->id,
-            ]);
+        $api_key = config('services.skylon.api_key');
+        $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/sub-events/event/'.$event->event_code);
+        
+        $sub_events = $response->json();
+        if(count($sub_events['data']) > 0){
+        //loop through exhibitors
+        foreach($sub_events['data'] as $sub_event){
+            //check if exhibitor exists
+            $event_exists = SubEvent::where('event_code',$sub_event['event_code'])->first();
+            //if not, create exhibitor
+            if(!$event_exists){
+                SubEvent::create([
+                    'event_id' => $event->id,
+                    'name' => $sub_event['name'],
+                    'start_date' => $sub_event['start_date'],
+                    'end_date' => $sub_event['end_date'],
+                    'year' => $sub_event['year'],
+                    'event_code' => $sub_event['event_code']
+                ]);
+                
+            }else{
+                $event_exists->update([
+                    'name' => $sub_event['name'],
+                    'start_date' => $sub_event['start_date'],
+                    'end_date' => $sub_event['end_date'],
+                    'year' => $sub_event['year'],
+                    'event_code' => $sub_event['event_code']
+                ]);
+            } 
         }
+    }
 
         $events = SubEvent::where('event_id', $event->id)->get();
 
@@ -97,38 +110,30 @@ class SubEventController extends Controller
             //fetch sub event
         $event = SubEvent::where('id', $event)->with('event')->first();
             //fetch registrants
-            $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/'.$event->event->event_code.'/delegates');
+            $api_key = config('services.skylon.api_key');
+            $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/sub-events/'.$event->event_code.'/printed-delegates');
 
-            $events = $response->json($key = 'data');
+            $delegates = $response->json($key = 'data');
 
             //delegate badge type
             $delegate_badge = BadgeType::where('name','Delegate')->first();
 
-            foreach($events as $sub_event){
-                if($sub_event['name'] != $event->name) continue;
-
-                foreach($sub_event['delegates']as $registrant){
-                    $delegate_exists = Badge::where('sub_event_id',$event->id)->where('reg_code', $registrant['registration_code'])->first();
-                    if(!$delegate_exists && $registrant['status']['name'] != 'Pending Payment'){
-                        Badge::create([
-                            'event_id' => $event->event->id,
-                            'sub_event_id' => $event->id,
-                            'name' => $registrant['title'].' '.$registrant['full_name'],
-                            'position' => $registrant['designation'],
-                            'company_name' => $registrant['company'],
-                            'city' => ($registrant['city'])? $registrant['city']['name']:'',
-                            'country' => ($registrant['country'])? $registrant['country']['name'] : '',
-                            'reg_code' => $registrant['registration_code'],
-                            'badge_type_id' => $delegate_badge->id,
-                        ]);
-                    }
-                    
+            foreach($delegates as $delegate){
+                $delegate_exists = Badge::where('sub_event_id',$event->id)->where('reg_code', $delegate['reg_code'])->first();
+                if(!$delegate_exists){
+                    Badge::create([
+                        'event_id' => $event->event->id,
+                        'sub_event_id' => $event->id,
+                        'name' =>$delegate['full_name'],
+                        'position' => $delegate['position'],
+                        'company_name' => $delegate['company_name'],
+                        'reg_code' => $delegate['reg_code'],
+                        'badge_type_id' => $delegate_badge->id,
+                    ]);
                 }
             }
 
             $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',0)->where('badge_type_id',$delegate_badge->id)->orderBy('created_at','desc')->paginate(25);
-
-            
 
             return view('delegates.index', ['badges' => $badges, 'event' => $event]);
     }

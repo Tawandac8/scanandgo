@@ -28,6 +28,7 @@ class Badge extends Model
         'is_printed',
         'printed_copies',
         'printed_date',
+        'printed_by',
         'receipt_number',
         'user_id',
         'industry',

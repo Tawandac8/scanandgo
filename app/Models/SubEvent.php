@@ -11,7 +11,13 @@ class SubEvent extends Model
         'name',
         'start_date',
         'end_date',
-        'year'
+        'year',
+        'event_code'
+    ];
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     public function event()
