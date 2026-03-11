@@ -306,7 +306,7 @@
                         
                         if (response.success) {
                             // Show success message
-                            messageBox.html('<i class="fas fa-check-circle me-2"></i> Badge found! Printing...').addClass('success-text').show();
+                            messageBox.html('<i class="fas fa-check-circle me-2"></i> Hi'+response.name+', your badge is printing...').addClass('success-text').show();
                             
                             // Inject HTML to print area and print
                             printArea.html(response.html).show();

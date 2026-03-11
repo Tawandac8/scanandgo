@@ -313,7 +313,8 @@ class VisitorController extends Controller
 
             return response()->json([
                 'success' => true,
-                'html' => $output
+                'html' => $output,
+                'name' => $badge->first_name
             ]);
         }
 
