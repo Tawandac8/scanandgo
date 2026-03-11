@@ -270,4 +270,56 @@ class VisitorController extends Controller
 
     //     return redirect()->back()->with('success', 'All visitors for '.$event->name.' have been deleted successfully.');
     // }
+
+    /**
+     * Display the self service portal view
+     */
+    public function selfService()
+    {
+        return view('visitors.self-service');
+    }
+
+    /**
+     * Handle the scanning of a badge at the self service portal
+     */
+    public function selfServiceScan(Request $request)
+    {
+        $reg_code = $request->reg_code;
+        $badge = Badge::where('reg_code', $reg_code)->first();
+
+        if ($badge) {
+            // mark as printed
+            if ($badge->is_printed == 0) {
+                $badge->printed_date = Carbon::now()->format('Y-m-d');
+            }
+            $badge->is_printed = 1;
+            $badge->printed_copies++;
+            $badge->save();
+
+            // construct badge html for printing
+            $output = '<div id="badge-print-content" class="card-body pb-0" style="padding: 20px; text-align: center;">';
+            if ($badge->title || $badge->first_name || $badge->last_name) {
+                $output .= '<h2 class="badge-name" style="margin-bottom: 5px; font-size: 24px;">' . $badge->title . ' ' . $badge->first_name . ' ' . $badge->last_name . '</h2>';
+            }
+            
+            $output .= '<p class="text-sm text-dark" style="margin: 0; font-size: 18px;">';
+            if ($badge->position) {
+                $output .= $badge->position . '<br>';
+            }
+            $output .= '<strong>' . $badge->company_name . '</strong></p>';
+            
+            $output .= '<div style="margin-top: 20px;">' . QrCode::size(150)->generate($badge->reg_code) . '</div>';
+            $output .= '</div>';
+
+            return response()->json([
+                'success' => true,
+                'html' => $output
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Badge not found for the provided code.'
+        ]);
+    }
 }

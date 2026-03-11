@@ -31,6 +31,10 @@ Route::middleware('auth')->group(function () {
     //visitor name search
     Route::get('/visitor/name/search',[VisitorController::class,'searchVisitorName'])->name('visitor.name.search');
 
+    //self-service portal
+    Route::get('/self-service', [VisitorController::class, 'selfService'])->name('self-service');
+    Route::post('/self-service/scan', [VisitorController::class, 'selfServiceScan'])->name('self-service.scan');
+
 });
 
 Route::group(['middleware' => ['role:admin|super-admin']], function () { 
