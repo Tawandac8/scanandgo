@@ -35,7 +35,8 @@ class Badge extends Model
         'purpose',
         'info_source',
         'product_group',
-        'serial_number'
+        'serial_number',
+        'is_hidden'
     ];
 
     public function event()

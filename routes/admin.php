@@ -20,4 +20,6 @@ Route::group(['middleware' => ['role:admin|super-admin']], function () {
 
     //delete delegates
     Route::get('/admin/sub-event-delegates/delete/{id}',[SubEventController::class,'destroyDelegates'])->name('delete.event.conference.delegates');
+    //delete duplicates
+    Route::get('/admin/sub-event-delegates/delete-duplicates/{id}',[SubEventController::class,'destroyDuplicates'])->name('delete.delegate.duplicates');
  });

@@ -22,6 +22,7 @@
                   <div class="dropdown float-lg-end pe-4">
                     <a href="{{ route('delegates.export',$event->id) }}" class="badge badge-sm bg-gradient-dark">Export printed</a>
                     <a href="{{ route('delegates.printed',$event->id) }}" class="badge badge-sm bg-gradient-warning">Printed Badges</a>
+                    <a href="{{ route('delete.delegate.duplicates',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete Duplicates</a>
                   </div>
                 </div>
               </div>

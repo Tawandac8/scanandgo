@@ -233,6 +233,20 @@ class SubEventController extends Controller
         return redirect()->back()->with('success', 'Delegates deleted successfully');
     }
 
+    public function destroyDuplicates($subEvent){
+        $badge_type = BadgeType::where('name','Delegate')->first();
+
+        $badges = Badge::where('sub_event_id',$subEvent)->where('badge_type_id', $badge_type->id)->where('is_printed',1)->get();
+        foreach($badges as $badge){
+            $duplicate_badges = Badge::where('name',$badge->name)->where('is_printed',0)->get();
+            foreach($duplicate_badges as $duplicate_badge){
+                $duplicate_badge->is_hidden = 1;
+                $duplicate_badge->save();
+            }
+        }
+        return redirect()->back()->with('success', 'Delegates hidden successfully');
+    }
+
     public function export($id){
         $event = SubEvent::where('id', $id)->first();
         $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',1)->orderBy('name','asc')->get();
