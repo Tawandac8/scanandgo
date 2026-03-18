@@ -216,6 +216,12 @@ class SubEventController extends Controller
         return redirect()->back()->with('success', 'Sub Event deleted successfully');
     }
 
+    public function destroyDelegates($subEvent)
+    {
+        Badge::where('sub_event_id', $subEvent)->where('is_printed',0)->delete();
+        return redirect()->back()->with('success', 'Delegates deleted successfully');
+    }
+
     public function export($id){
         $event = SubEvent::where('id', $id)->first();
 

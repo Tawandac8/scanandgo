@@ -17,4 +17,7 @@ Route::group(['middleware' => ['role:admin|super-admin']], function () {
     Route::delete('/admin/user/delete/{id}',[UserController::class,'destroy'])->name('users.destroy');
     //delete sub event
     Route::get('/admin/sub-event/delete/{id}',[SubEventController::class,'destroy'])->name('delete.event.subevent');
+
+    //delete delegates
+    Route::get('/admin/delegates/delete/{id}',[SubEventController::class,'destroyDelegates'])->name('delete.event.conference.delegate');
  });
