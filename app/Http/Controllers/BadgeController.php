@@ -118,6 +118,7 @@ class BadgeController extends Controller
     public function show($badge)
     {
         $badge = Badge::where('id',$badge)->first();
+        $delegate_badge = BadgeType::where('name','Delegate')->first();
 
         $output = '';
         $output = '<div id="badge" class="card-body pb-0">';
@@ -133,8 +134,11 @@ class BadgeController extends Controller
 
             $output .= $badge->company_name.'</p>';
         }
-              
-        $output .= QrCode::generate($badge->reg_code);
+          if($badge->badge_type_id == $delegate_badge->id){
+            $output .= QrCode::generate('https://myskylon.com/c/linktree/'.$badge->reg_code);
+          }else{
+            $output .= QrCode::generate($badge->reg_code);
+          }    
 
         $output .= '</div><div class="card-footer">
               <span onclick="startPrint('.$badge->id.')" class="btn bg-gradient-primary">Print</span>
