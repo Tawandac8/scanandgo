@@ -2,20 +2,25 @@
 
 namespace App\Exports;
 
-use App\Models\Badge;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class BadgeExport implements FromCollection
+class BadgeExport implements FromView
 {
-    public $event;
-    public function __construct($event) {
-        $this->event = $event;
+    public $badges;
+
+    public function __construct($badges)
+    {
+        $this->badges = $badges;
     }
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+    public function view(): View
     {
-        return Badge::where('sub_event_id', $this->event->id)->where('is_printed', 1)->get();
+        return view('delegates.exports', [
+            'badges' => $this->badges
+        ]);
     }
 }
+

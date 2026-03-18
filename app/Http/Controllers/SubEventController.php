@@ -235,7 +235,7 @@ class SubEventController extends Controller
 
     public function export($id){
         $event = SubEvent::where('id', $id)->first();
-
-        return Excel::download(new BadgeExport($event), $event->name.' '.$event->year.' '.'delegates.xlsx');
+        $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',1)->orderBy('name','asc')->get();
+        return Excel::download(new BadgeExport($badges), $event->name.' '.$event->year.' '.'printed-delegates.xlsx');
     }
 }
