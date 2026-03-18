@@ -21,7 +21,7 @@
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
                     <a href="{{ route('delegates.export',$event->id) }}" class="badge badge-sm bg-gradient-dark">Export printed</a>
-                    <a href="{{ route('delegates.printed',$event->id) }}" class="badge badge-sm bg-gradient-warning">Printed Badges</a>
+                    <a href="{{ route('delegates.printed',$event->id) }}" class="badge badge-sm bg-gradient-dark">Printed Badges</a>
                   </div>
                 </div>
               </div>
@@ -32,7 +32,9 @@
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Company</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed Copies</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -48,11 +50,17 @@
                         </div>
                       </td>
                       <td>
+                        <p class="text-xs font-weight-bold mb-0">{{ $badge->company_name }}</p>
+                      </td>
+                      <td>
                         @if($badge->is_printed)
                         <span class="badge badge-sm bg-gradient-success">Yes</span>
                         @else
                         <span class="badge badge-sm bg-gradient-danger">No</span>
                         @endif
+                      </td>
+                      <td class="text-center">
+                        <p class="text-xs font-weight-bold mb-0">{{ $badge->printed_copies }}</p>
                       </td>
                       <td>
                         <span onclick="viewBadge({{ $badge->id }})" style="cursor: pointer" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>

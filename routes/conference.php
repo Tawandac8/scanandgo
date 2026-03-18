@@ -17,4 +17,7 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
 
     //export delegates
     Route::get('/delegates/export/{event}',[SubEventController::class,'export'])->name('delegates.export');
+
+    //printed badges
+    Route::get('/delegates/printed/{event}',[SubEventController::class,'printed'])->name('delegates.printed');
 });

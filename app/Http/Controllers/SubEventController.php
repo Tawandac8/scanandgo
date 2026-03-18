@@ -85,6 +85,12 @@ class SubEventController extends Controller
         return view('delegates.event',['events'=>$events,'event'=>$event]);
     }
 
+    public function printed($event){
+        $event = SubEvent::where('id', $event)->with('event')->first();
+        $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',1)->orderBy('name','asc')->paginate(25);
+        return view('delegates.printed',['badges'=>$badges,'event'=>$event]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
