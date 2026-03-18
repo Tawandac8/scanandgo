@@ -161,6 +161,7 @@
                 url: '/other/badge/print/'+id,
                 type: 'GET',
                 success: function(response) {
+                  console.log('printed');
                 },
                 error: function(xhr) {
                 }

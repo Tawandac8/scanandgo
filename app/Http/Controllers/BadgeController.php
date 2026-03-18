@@ -120,6 +120,13 @@ class BadgeController extends Controller
         $badge = Badge::where('id',$badge)->first();
         $delegate_badge = BadgeType::where('name','Delegate')->first();
 
+        // $badge->update([
+        //     'is_printed' => 1,
+        //     'printed_copies' => $badge->printed_copies + 1,
+        //     'printed_by' => Auth::user()->name,
+        //     'printed_date' => Carbon::now()->format('Y-m-d')
+        // ]);
+
         $output = '';
         $output = '<div id="badge" class="card-body pb-0">';
 
