@@ -32,10 +32,7 @@
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Badge Type</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Printed Copies</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -51,20 +48,11 @@
                         </div>
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold"> {{ $badge->company_name }} </span>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold"> {{ $badge->badge_type->name }} </span>
-                      </td>
-                      <td>
                         @if($badge->is_printed)
                         <span class="badge badge-sm bg-gradient-success">Yes</span>
                         @else
                         <span class="badge badge-sm bg-gradient-danger">No</span>
                         @endif
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> {{ $badge->printed_copies }} </span>
                       </td>
                       <td>
                         <span onclick="viewBadge({{ $badge->id }})" style="cursor: pointer" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
