@@ -218,7 +218,12 @@ class SubEventController extends Controller
 
     public function destroyDelegates($subEvent)
     {
-        Badge::where('sub_event_id', $subEvent)->where('is_printed',0)->delete();
+        $badge_type = BadgeType::where('name','Delegate')->first();
+
+        $badges = Badge::where('badge_type_id', $badge_type->id)->where('is_printed',0)->get();
+        foreach($badges as $badge){
+            $badge->delete();
+        }
         return redirect()->back()->with('success', 'Delegates deleted successfully');
     }
 
