@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SubEventController;
 
 Route::group(['middleware' => ['role:admin|super-admin']], function () { 
     //users
@@ -12,4 +13,8 @@ Route::group(['middleware' => ['role:admin|super-admin']], function () {
     Route::get('/admin/user/edit/{id}',[UserController::class,'edit'])->name('users.edit');
     //update user
     Route::post('/admin/user/update/{id}',[UserController::class,'update'])->name('users.update');
+    //delete user
+    Route::delete('/admin/user/delete/{id}',[UserController::class,'destroy'])->name('users.destroy');
+    //delete sub event
+    Route::get('/admin/sub-event/delete/{id}',[SubEventController::class,'destroy'])->name('delete.event.subevent');
  });

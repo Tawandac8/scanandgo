@@ -44,13 +44,11 @@ All Events
                         <span class="text-xs font-weight-bold"> {{ $event->year }} </span>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> {{ $event->getAllVisitors() }} </span>
+                        <span class="text-xs font-weight-bold"></span>
                       </td>
                       <td>
                         <a href="{{ route('concurrent.events',$event->event_code) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
-                        @role('super-admin')
-                        {{-- <a href="{{ route('delete.event.visitors',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete <i class="fa-solid fa-arrow-right"></i></a> --}}
-                        @endrole
+                        
                       </td>
                     </tr>
                     @endforeach

@@ -51,7 +51,6 @@ class SubEventController extends Controller
 
         $api_key = config('services.skylon.api_key');
         $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/sub-events/event/'.$event->event_code);
-        
         $sub_events = $response->json();
         if(count($sub_events['data']) > 0){
         //loop through exhibitors
@@ -211,9 +210,10 @@ class SubEventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SubEvent $subEvent)
+    public function destroy($subEvent)
     {
-        //
+        SubEvent::where('id', $subEvent)->delete();
+        return redirect()->back()->with('success', 'Sub Event deleted successfully');
     }
 
     public function export($id){
