@@ -138,7 +138,7 @@ class SubEventController extends Controller
                 }
             }
 
-            $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',0)->where('badge_type_id',$delegate_badge->id)->orderBy('created_at','desc')->paginate(25);
+            $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',0)->where('badge_type_id',$delegate_badge->id)->where('is_hidden',0)->orderBy('created_at','desc')->paginate(25);
 
             return view('delegates.index', ['badges' => $badges, 'event' => $event]);
     }
