@@ -16,8 +16,8 @@
                 </div>
                 <div class="col-md-4">
                   <select onchange="searchBy(this.value)" class="form-select" name="search_by" id="">
-                    <option value="name" selected>Search By Name</option>
-                    <option value="qr">Scan Code/Search Code</option>
+                    <option value="name" >Search By Name</option>
+                    <option value="qr" selected>Scan Code/Search Code</option>
                     
                   </select>
                 </div>
