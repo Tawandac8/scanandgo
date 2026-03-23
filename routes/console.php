@@ -64,7 +64,7 @@ Schedule::call(function () {
                     }
             }
         }
-        })->everyTwoMinutes();
+        })->everyMinute();
 
 //Exhibitor Badges
 Schedule::call(function(){
