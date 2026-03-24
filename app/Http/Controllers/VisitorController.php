@@ -141,6 +141,7 @@ class VisitorController extends Controller
     function searchVisitor(Request $request){
 
             $visitor = Badge::where('reg_code', $request->q)->first();
+            dd($visitor);
             if($visitor){
             $output = '';
             $output = '<div id="badge" class="card-body pb-0">';
