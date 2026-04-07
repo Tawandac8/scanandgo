@@ -74,6 +74,11 @@ class BadgeController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'serial_number' => 'required',
+            'badge_type' => 'required',
+            'event' => 'required',
+        ]);
         //create a random 10 digit number
         $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyz"), 0, 10);
         //create registration code
@@ -86,6 +91,10 @@ class BadgeController extends Controller
             'badge_type_id' => $request->badge_type,
             'event_id' => $request->event,
             'reg_code' => $registration_code,
+            'serial_number' => $request->serial_number,
+            'printed_by' => Auth::user()->name,
+            'printed_date' => Carbon::now()->format('Y-m-d'),
+            'is_printed' => 1,
         ]);
 
         $output = '';

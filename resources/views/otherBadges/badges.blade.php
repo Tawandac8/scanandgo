@@ -105,6 +105,10 @@
                     <input type="text" id="company" name="company" class="form-control" placeholder="Enter Name">
                 </div>
                 <div class="mb-4">
+                    <label for="">Serial Number</label>
+                    <input type="text" id="serial_number" name="serial_number" class="form-control" placeholder="Enter Serial Number">
+                </div>
+                <div class="mb-4">
                     <label for="">Badge Type</label>
                     <select name="badge_type" id="badge_type" class="form-select">
                         <option value="" selected disabled> Select Badge Type</option>
@@ -156,6 +160,7 @@
                     $('#badge-wrapper').html(response);
                     $('.add-exhibitor-badge').slideUp('fast','swing', function() {
                         $('#badge-wrapper').slideDown('fast');
+                        
                     });
 
                 },
@@ -164,6 +169,8 @@
                 }
             });
         }
+
+        function rePrintBadge(id){}
 
         function startPrint(id){
             printBadge()
@@ -197,11 +204,17 @@
         function storeBadge(id){
             var name = $('#name').val();
             var company = $('#company').val();
+            var serial_number = $('#serial_number').val();
             var badge_type = $('#badge_type').val();
             var _token = $('meta[name="csrf-token"]').attr('content');
             if(badge_type == null || badge_type == ""){
                 alert('Please select badge type');
                 $('#badge_type').css('border','1px solid red');
+                return;
+            }
+            if(serial_number == null || serial_number == ""){
+                alert('Please enter serial number');
+                $('#serial_number').css('border','1px solid red');
                 return;
             }
             $.ajax({
@@ -210,6 +223,7 @@
                 data: {
                     name: name,
                     company: company,
+                    serial_number: serial_number,
                     badge_type: badge_type,
                     event: id,
                     _token: _token
@@ -231,6 +245,10 @@
 @section('styles')
     <style>
         .add-exhibitor-badge{
+            display:none;
+        }
+
+        .reprint-badge{
             display:none;
         }
     </style>
