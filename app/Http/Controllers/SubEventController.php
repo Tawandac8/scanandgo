@@ -213,6 +213,17 @@ class SubEventController extends Controller
         //
     }
 
+    function updateSerialNumber(Request $request, $id){
+        $badge = Badge::where('id', $id)->first();
+        $badge->update([
+            'serial_number' => $request->serial_number
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Serial number updated successfully'
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

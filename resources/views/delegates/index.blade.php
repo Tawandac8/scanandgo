@@ -22,7 +22,9 @@
                   <div class="dropdown float-lg-end pe-4">
                     <a href="{{ route('delegates.export',$event->id) }}" class="badge badge-sm bg-gradient-dark">Export printed</a>
                     <a href="{{ route('delegates.printed',$event->id) }}" class="badge badge-sm bg-gradient-warning">Printed Badges</a>
+                    @role('super-admin')
                     <a href="{{ route('delete.delegate.duplicates',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete Duplicates</a>
+                    @endrole
                   </div>
                 </div>
               </div>
@@ -75,6 +77,12 @@
           </div>
         </div>
         <div class="col-lg-4 col-md-12 mb-md-0 mb-4">
+          <div class="card serial-number mb-2">
+            <div class="card-body">
+            <label for="serial-number">Serial Number</label>
+            <input type="text" name="serial-number" id="serial-number" class="form-control">
+            </div>
+          </div>
             <div id="badge-wrapper" class="card text-center">
             <div id="badge" class="card-body pb-0">
               <h4 class="badge-name">John Doe</h4>
@@ -89,6 +97,14 @@
           </div>
         </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    .serial-number{
+        display: none;
+    }
+</style>
 @endsection
 
 @section('scripts')
@@ -126,6 +142,8 @@
                         $('#badge-wrapper').slideDown('fast');
                     });
 
+                    $('.serial-number').slideDown('fast');
+
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -134,8 +152,27 @@
         }
 
         function startPrint(id){
-            printBadge()
-            changePrintStatus(id)
+          var serial_number = $('#serial-number').val();
+          if(serial_number){
+            $.ajax({
+                url: '/admin/delegate-badge/serial-number/'+id,
+                type: 'GET',
+                data: {
+                    serial_number: serial_number
+                },
+                success: function(response) {
+                  if(response.success){
+                    printBadge()
+                    changePrintStatus(id)
+                  }
+                },
+                error: function(xhr) {
+                }
+            });
+            
+          }else{
+            alert('Please enter serial number');
+          }
 
             window.onafterprint = function() {
         // Reload the page after the print dialog is closed
