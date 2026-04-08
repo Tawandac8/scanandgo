@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\BadgeType;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\BadgesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class BadgeController extends Controller
 {
@@ -54,7 +57,7 @@ class BadgeController extends Controller
 
         $delegate_badge = BadgeType::where('name','Delegate')->first();
 
-        $badges = Badge::where('event_id',$event->id)->where('badge_type_id','!=',$visitor_badge->id)->paginate(30);
+        $badges = Badge::where('event_id',$event->id)->where('badge_type_id','!=',$visitor_badge->id)->where('badge_type_id','!=',$delegate_badge->id)->paginate(30);
 
         $badge_types = BadgeType::all();
 
@@ -163,7 +166,7 @@ class BadgeController extends Controller
         return $output;
     }
 
-    function print($badge){
+    public function print($badge){
         $badge = Badge::where('id',$badge)->first();
         $badge->update([
             'is_printed' => 1,
@@ -171,6 +174,15 @@ class BadgeController extends Controller
             'printed_by' => Auth::user()->name,
             'printed_date' => Carbon::now()->format('Y-m-d')
         ]);
+    }
+
+    public function export($event)
+    {
+        $event_model = Event::findOrFail($event);
+        $visitor_badge = BadgeType::where('name','Visitor')->first();
+        $delegate_badge = BadgeType::where('name','Delegate')->first();
+        $badges = Badge::where('event_id',$event_model->id)->where('badge_type_id','!=',$visitor_badge->id)->where('badge_type_id','!=',$delegate_badge->id)->where('is_printed',1)->orderBy('company_name','ASC')->get();
+        return Excel::download(new BadgesExport($badges), $event_model->name.' Badges.xlsx');
     }
 
     /**

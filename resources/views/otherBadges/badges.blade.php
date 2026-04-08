@@ -15,6 +15,7 @@
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
+                    <a href="{{ route('badges.export', $event->id) }}" class="badge badge-sm bg-gradient-success me-2">Export Excel</a>
                     <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
 
                   </div>

@@ -15,4 +15,6 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     Route::get('/other/badge/{badge}',[BadgeController::class,'show']);
     //print badge
     Route::get('/other/badge/print/{badge}',[BadgeController::class,'print']);
+    //export badges
+    Route::get('/export/{event}/badges',[BadgeController::class,'export'])->name('badges.export');
 });
