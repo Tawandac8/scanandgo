@@ -78,6 +78,7 @@
                         <span class="text-xs font-weight-bold">  </span>
                       </td>
                       <td>
+                        <a href="{{ route('exhibitor.badge.export',$exhibitor->id) }}" class="badge badge-sm bg-gradient-success">Export Printed</a>
                         <a href="{{ route('exhibitor.badges.index',$exhibitor->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
                         @role('super-admin')
                         <a href="{{ route('exhibitor.destroy.duplicate',$exhibitor->id) }}" class="badge badge-sm bg-gradient-danger">delete <i class="fa-solid fa-arrow-right"></i></a>

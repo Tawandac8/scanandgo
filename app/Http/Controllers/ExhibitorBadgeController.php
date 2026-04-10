@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\ExportExhibitorBadges;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExhibitorBadgeController extends Controller
 {
@@ -175,6 +177,13 @@ class ExhibitorBadgeController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function exportByExhibitor($exhibitor)
+    {
+        $exhibitor = Exhibitor::findOrFail($exhibitor);
+        $badges = ExhibitorBadge::where('exhibitor_id', $exhibitor->id)->where('is_printed', 1)->with(['exhibitor', 'badge_type'])->get();
+        return Excel::download(new ExportExhibitorBadges($badges), $exhibitor->company_name . ' Printed Badges.xlsx');
     }
 
     /**
