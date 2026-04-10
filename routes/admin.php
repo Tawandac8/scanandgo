@@ -23,6 +23,5 @@ Route::group(['middleware' => ['role:admin|super-admin']], function () {
     //delete duplicates
     Route::get('/admin/sub-event-delegates/delete-duplicates/{id}',[SubEventController::class,'destroyDuplicates'])->name('delete.delegate.duplicates');
 
-    //update serial number
-    Route::get('/admin/delegate-badge/serial-number/{id}',[SubEventController::class,'updateSerialNumber'])->name('update.delegate.serial.number');
+    
  });
