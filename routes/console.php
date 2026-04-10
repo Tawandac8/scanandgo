@@ -11,6 +11,7 @@ use App\Models\Exhibitor;
 use App\Models\ExhibitorBadge;
 use App\Models\SubEvent;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -30,7 +31,7 @@ Schedule::call(function () {
 
             foreach($badges as $badge){
                 $badge_exists = Badge::where('reg_code',$badge['registration_code'])->first();
-
+                try{
                 if($badge['profile']){
                     $company_name = isset($badge['profile']['company'])? $badge['profile']['company']['name'] : $badge['profile']['student']['school_name'];
                     $position = isset($badge['profile']['company'])? $badge['profile']['company']['department'] : $badge['profile']['student']['level'];
@@ -62,6 +63,9 @@ Schedule::call(function () {
                             'email' => ($badge['profile'])? $badge['profile']['user']['email'] : $badge['email']
                         ]);
                     }
+                }catch(Exception $e){
+                    Log::error($e->getMessage());
+                }
             }
         }
         })->everyMinute();
