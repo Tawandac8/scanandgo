@@ -126,7 +126,10 @@ class ExhibitorBadgeController extends Controller
             'printed_date' => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->back()->with('success', 'Serial number updated successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Serial number updated successfully.',
+        ]);
     }
 
     function getPrintedBadges($exhibitor){
