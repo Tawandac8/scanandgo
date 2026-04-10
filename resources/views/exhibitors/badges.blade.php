@@ -77,6 +77,12 @@
           </div>
         </div>
         <div class="col-lg-4 col-md-12 mb-md-0 mb-4">
+          <div class="card mb-4 serial-number">
+            <div class="card-body">
+              <label for="">Serial Number</label>
+              <input type="text" id="serial_number" class="form-control" placeholder="Enter Serial Number">
+            </div>
+          </div>
             <div id="badge-wrapper" class="card text-center">
             <div id="badge" class="card-body pb-0">
               <h4 class="badge-name">John Doe</h4>
@@ -144,7 +150,7 @@
                 type: 'GET',
                 success: function(response) {
                     $('#badge-wrapper').html(response);
-
+                    $('.serial-number').show();
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -153,8 +159,29 @@
         }
 
         function startPrint(id){
-            printBadge()
+          var serial_number = $('#serial_number').val();
+          if(serial_number == ''){
+            $('#serial_number').addClass('is-invalid');
+            $('#serial_number').after('<span class="text-danger">Please enter serial number</span>');
+            return;
+          }
+          $('#serial_number').removeClass('is-invalid');
+          $('#serial_number').after('<span class="text-success">Serial number entered</span>');
+
+          $.ajax({
+            url: '/exhibitor/update-serial-number/'+id,
+            type: 'GET',
+            data: {
+              'serial_number': serial_number
+            },
+            success: function(response) {
+              printBadge()
             changePrintStatus(id)
+            },
+            error: function(xhr) {
+            }
+          });
+            
 
             window.onafterprint = function() {
         // Reload the page after the print dialog is closed
@@ -186,6 +213,10 @@
 @section('styles')
     <style>
         .add-exhibitor-badge{
+            display:none;
+        }
+
+        .serial-number{
             display:none;
         }
     </style>

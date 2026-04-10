@@ -106,6 +106,16 @@ class ExhibitorBadgeController extends Controller
 
         }
 
+    public function updateSerialNumber(Request $request, $badge)
+    {
+        $badge = ExhibitorBadge::where('id',$badge)->first();
+        $badge->update([
+            'serial_number' => $request->serial_number
+        ]);
+
+        return redirect()->back()->with('success', 'Serial number updated successfully.');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
