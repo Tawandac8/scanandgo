@@ -154,6 +154,29 @@ class ExhibitorBadgeController extends Controller
         //
     }
 
+    public function getBadgeData($badge)
+    {
+        $badge = ExhibitorBadge::where('id', $badge)->first();
+        return response()->json($badge);
+    }
+
+    public function updateBadgeData(Request $request, $badge)
+    {
+        $badge = ExhibitorBadge::where('id', $badge)->first();
+        $badge->update([
+            'name' => $request->name,
+            'badge_type_id' => $request->badge_type_id,
+            'is_printed' => $request->is_printed,
+            'printed_copies' => $request->printed_copies,
+            'serial_number' => $request->serial_number,
+            'printed_by' => $request->printed_by,
+            'printed_date' => $request->printed_date,
+            'printed_in_bulawayo' => $request->printed_in_bulawayo ? 1 : 0,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

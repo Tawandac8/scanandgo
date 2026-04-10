@@ -41,7 +41,13 @@
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ $badge->name }}</h6>
+                            <h6 class="mb-0 text-sm">
+                              @role('super-admin')
+                                <span onclick="editBadge({{ $badge->id }})" style="cursor: pointer; border-bottom: 1px dashed #cb0c9f;">{{ $badge->name }}</span>
+                              @else
+                                {{ $badge->name }}
+                              @endrole
+                            </h6>
                           </div>
                         </div>
                       </td>
@@ -117,6 +123,70 @@
             </div>
           </div>
         </div>
+</div>
+
+<!-- Edit Badge Modal -->
+<div class="modal fade" id="editBadgeModal" tabindex="-1" role="dialog" aria-labelledby="editBadgeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editBadgeModalLabel">Edit Badge</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-start">
+        <form id="editBadgeForm">
+          <input type="hidden" id="edit_badge_id">
+          <div class="form-group mb-3">
+            <label for="edit_name">Name</label>
+            <input type="text" class="form-control" id="edit_name" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_badge_type_id">Badge Type</label>
+            <select class="form-select" id="edit_badge_type_id" required>
+              @foreach($types as $type)
+                <option value="{{ $type->id }}">{{ $type->name }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_is_printed">Is Printed</label>
+            <select class="form-select" id="edit_is_printed">
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_printed_copies">Printed Copies</label>
+            <input type="number" class="form-control" id="edit_printed_copies" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_serial_number">Serial Number</label>
+            <input type="text" class="form-control" id="edit_serial_number">
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_printed_by">Printed By</label>
+            <input type="text" class="form-control" id="edit_printed_by">
+          </div>
+          <div class="form-group mb-3">
+            <label for="edit_printed_date">Printed Date</label>
+            <input type="text" class="form-control" id="edit_printed_date">
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="edit_printed_in_bulawayo">
+            <label class="form-check-label" for="edit_printed_in_bulawayo">
+              Printed in Bulawayo
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn bg-gradient-primary" onclick="updateBadge()">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection
 
@@ -206,6 +276,54 @@
                 $('.add-exhibitor-badge').slideDown('fast');
             });
         }
+
+        @role('super-admin')
+        function editBadge(id) {
+            $.ajax({
+                url: '/exhibitor/badge/data/' + id,
+                type: 'GET',
+                success: function(badge) {
+                    $('#edit_badge_id').val(badge.id);
+                    $('#edit_name').val(badge.name);
+                    $('#edit_badge_type_id').val(badge.badge_type_id);
+                    $('#edit_is_printed').val(badge.is_printed);
+                    $('#edit_printed_copies').val(badge.printed_copies);
+                    $('#edit_serial_number').val(badge.serial_number);
+                    $('#edit_printed_by').val(badge.printed_by);
+                    $('#edit_printed_date').val(badge.printed_date);
+                    $('#edit_printed_in_bulawayo').prop('checked', badge.printed_in_bulawayo == 1);
+                    
+                    $('#editBadgeModal').modal('show');
+                }
+            });
+        }
+
+        function updateBadge() {
+            var id = $('#edit_badge_id').val();
+            var data = {
+                _token: '{{ csrf_token() }}',
+                name: $('#edit_name').val(),
+                badge_type_id: $('#edit_badge_type_id').val(),
+                is_printed: $('#edit_is_printed').val(),
+                printed_copies: $('#edit_printed_copies').val(),
+                serial_number: $('#edit_serial_number').val(),
+                printed_by: $('#edit_printed_by').val(),
+                printed_date: $('#edit_printed_date').val(),
+                printed_in_bulawayo: $('#edit_printed_in_bulawayo').is(':checked') ? 1 : 0
+            };
+
+            $.ajax({
+                url: '/exhibitor/badge/update/' + id,
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                }
+            });
+        }
+        @endrole
 </script>
 @endsection
 

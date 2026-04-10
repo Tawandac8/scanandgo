@@ -33,4 +33,9 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
 
     //update serial number
     Route::get('/exhibitor/update-serial-number/{badge}',[ExhibitorBadgeController::class,'updateSerialNumber'])->name('exhibitor.update.serial.number');
+
+    Route::group(['middleware' => ['role:super-admin']], function () {
+        Route::get('/exhibitor/badge/data/{badge}', [ExhibitorBadgeController::class, 'getBadgeData']);
+        Route::post('/exhibitor/badge/update/{badge}', [ExhibitorBadgeController::class, 'updateBadgeData']);
+    });
 });
