@@ -64,7 +64,7 @@ Schedule::call(function () {
                         ]);
                     }
                 }catch(Exception $e){
-                    Log::error($e->getMessage());
+                    
                 }
             }
         }
