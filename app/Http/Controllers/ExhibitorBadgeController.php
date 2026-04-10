@@ -119,7 +119,11 @@ class ExhibitorBadgeController extends Controller
     {
         $badge = ExhibitorBadge::where('id',$badge)->first();
         $badge->update([
-            'serial_number' => $request->serial_number
+            'serial_number' => $request->serial_number,
+            'printed_copies' => $badge->printed_copies + 1,
+            'printed_in_bulawayo' => 1,
+            'printed_by' => Auth::user()->name,
+            'printed_date' => date('Y-m-d H:i:s'),
         ]);
 
         return redirect()->back()->with('success', 'Serial number updated successfully.');
