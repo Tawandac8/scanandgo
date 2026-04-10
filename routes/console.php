@@ -125,9 +125,12 @@ Schedule::call(function(){
 //                     'batch_number' => $exhibitor_badge['batch_number'],
 //                 ]);
 //             }else{
-//                 $exhibitor_badge_exists->update([
-//                     'name' => $exhibitor_badge['name']
-//                 ]);
+//                 $exhibitor_badge_exists->name = $exhibitor_badge['name'];
+//                 if($exhibitor_badge['is_printed'] == 1){
+//                     $exhibitor_badge_exists->printed_copies = $exhibitor_badge['printed_quantity'];
+//                     $exhibitor_badge_exists->is_printed = 1;
+//                 }
+//                 $exhibitor_badge_exists->save();
 //             }
 //         }
 //     }

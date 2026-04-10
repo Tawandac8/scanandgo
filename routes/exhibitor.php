@@ -28,6 +28,9 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     //get printed badges
     Route::get('/printed-badges/{event}',[ExhibitorController::class,'printedBadges'])->name('printed.badges');
 
+    //get printed badges
+    Route::get('/exhibitor/get-printed-badges/{exhibitor}',[ExhibitorBadgeController::class,'getPrintedBadges'])->name('exhibitor.badge.printed');
+
     //update serial number
     Route::get('/exhibitor/update-serial-number/{badge}',[ExhibitorBadgeController::class,'updateSerialNumber'])->name('exhibitor.update.serial.number');
 });

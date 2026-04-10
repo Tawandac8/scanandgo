@@ -8,6 +8,7 @@ use App\Models\BadgeType;
 use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExhibitorBadgeController extends Controller
 {
@@ -17,7 +18,6 @@ class ExhibitorBadgeController extends Controller
     public function index($exhibitor)
     {
         $exhibitor = Exhibitor::where('id', $exhibitor)->first();
-        
         //
         $api_key = config('services.skylon.api_key');
         $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitor-badges/'.$exhibitor->code);
@@ -38,13 +38,16 @@ class ExhibitorBadgeController extends Controller
                     'batch_number' => $exhibitor_badge['batch_number'],
                 ]);
             }else{
-                $exhibitor_badge_exists->update([
-                    'name' => $exhibitor_badge['name']
-                ]);
+                $exhibitor_badge_exists->name = $exhibitor_badge['name'];
+                if($exhibitor_badge['is_printed'] == 1){
+                    $exhibitor_badge_exists->printed_copies = $exhibitor_badge['printed_quantity'];
+                    $exhibitor_badge_exists->is_printed = 1;
+                }
+                $exhibitor_badge_exists->save();
             }
         }
         //
-        $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->paginate(25);
+        $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->where('is_printed',0)->paginate(25);
         $badge_types = BadgeType::all();
 
         return view('exhibitors.badges',[ 'badges' => $badges, 'exhibitor' => $exhibitor,'types'=>$badge_types]);
@@ -101,7 +104,10 @@ class ExhibitorBadgeController extends Controller
         $badge = ExhibitorBadge::where('id',$badge)->with('exhibitor')->first();
         $badge->update([
             'is_printed' => true,
-            'printed_copies' => $badge->printed_copies + 1
+            'printed_copies' => $badge->printed_copies + 1,
+            'printed_in_bulawayo' => 1,
+            'printed_by' => Auth::user()->name,
+            'printed_date' => date('Y-m-d H:i:s'),
         ]);
 
         }
@@ -114,6 +120,12 @@ class ExhibitorBadgeController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Serial number updated successfully.');
+    }
+
+    function getPrintedBadges($exhibitor){
+        $exhibitor = Exhibitor::where('id',$exhibitor)->first();
+        $badges = ExhibitorBadge::where('exhibitor_id',$exhibitor->id)->where('is_printed',1)->paginate(25);
+        return view('exhibitors.printed-badges', compact('badges','exhibitor'));
     }
 
     /**

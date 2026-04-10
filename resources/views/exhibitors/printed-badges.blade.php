@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-{{ $exhibitor->company_name }} Badges
+{{ $exhibitor->company_name }} Printed Badges
 @endsection
 
 @section('content')
@@ -11,12 +11,11 @@
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>{{ $exhibitor->company_name }} Badges</h6>
+                  <h6>{{ $exhibitor->company_name }} Printed Badges</h6>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <a href="{{ route('exhibitor.badge.printed',$exhibitor->id) }}" class="badge badge-sm bg-gradient-warning">Printed</a>
-                    <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
+                    <a href="" class="badge badge-sm bg-gradient-warning">Unprinted Badges</a>
 
                   </div>
                 </div>
@@ -94,26 +93,6 @@
             </div>
             <div class="card-footer">
               <span onclick="" class="btn bg-gradient-primary">Print</span>
-            </div>
-          </div>
-          <div class="card add-exhibitor-badge">
-            <div class="card-body">
-                <form action="{{ route('exhibitor.badge.add',$exhibitor->id) }}" method="post">
-                    @csrf
-                <div class="mb-4">
-                    <label for="">Name</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
-                </div>
-                <div class="mb-4">
-                    <label for="">Badge Type</label>
-                    <select name="badge_type" id="" class="form-select">
-                        @foreach($types as $type)
-                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <button class="btn btn-dark w-100">Add Badge</button>
-                </form>
             </div>
           </div>
         </div>

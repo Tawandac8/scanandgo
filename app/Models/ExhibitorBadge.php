@@ -12,10 +12,11 @@ class ExhibitorBadge extends Model
         'badge_type_id',
         'is_printed',
         'printed_copies',
-        'batch_number',
+        'batch_number', 
         'printed_by',
         'printed_date',
-        'serial_number'
+        'serial_number',
+        'printed_in_bulawayo'
     ];
 
 
