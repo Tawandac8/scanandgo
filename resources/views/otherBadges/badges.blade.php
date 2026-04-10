@@ -15,7 +15,8 @@
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    <a href="{{ route('badges.export', $event->id) }}" class="badge badge-sm bg-gradient-success me-2">Export Excel</a>
+                    <a href="{{ route('badges.export', $event->id) }}" class="badge badge-sm bg-gradient-success me-2">Export All</a>
+                    <button type="button" class="badge badge-sm bg-gradient-info me-2 border-0" data-bs-toggle="modal" data-bs-target="#advancedExportModal">Advanced Export</button>
                     <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
 
                   </div>
@@ -125,6 +126,52 @@
             </div>
           </div>
         </div>
+</div>
+
+<!-- Advanced Export Modal -->
+<div class="modal fade" id="advancedExportModal" tabindex="-1" role="dialog" aria-labelledby="advancedExportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="advancedExportModalLabel">Advanced Export</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-start">
+        <form id="advancedExportForm" action="{{ route('badges.export.advanced', $event->id) }}" method="GET">
+          <div class="form-group mb-3">
+            <label for="filter_badge_type">Badge Type</label>
+            <select class="form-select" name="badge_type" id="filter_badge_type">
+              <option value="">All Badge Types</option>
+              @foreach($types as $type)
+                @if($type->name != "Visitor" && $type->name != "Delegate")
+                  <option value="{{ $type->id }}">{{ $type->name }}</option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="filter_company_name">Company Name</label>
+            <input type="text" class="form-control" name="company_name" id="filter_company_name" placeholder="Enter company name">
+          </div>
+          <div class="form-group mb-3">
+            <label for="filter_printed_by">Printed By</label>
+            <select class="form-select" name="printed_by" id="filter_printed_by">
+              <option value="">All Printers</option>
+              @foreach($printers as $printer)
+                <option value="{{ $printer }}">{{ $printer }}</option>
+              @endforeach
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn bg-gradient-success" onclick="document.getElementById('advancedExportForm').submit(); $('#advancedExportModal').modal('hide');">Export Excel</button>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection
 

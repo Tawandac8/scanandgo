@@ -61,7 +61,9 @@ class BadgeController extends Controller
 
         $badge_types = BadgeType::all();
 
-        return view('otherBadges.badges', ['badges' => $badges,'event'=>$event,'types'=>$badge_types]);
+        $printers = Badge::where('event_id', $event->id)->whereNotNull('printed_by')->distinct()->pluck('printed_by');
+
+        return view('otherBadges.badges', ['badges' => $badges,'event'=>$event,'types'=>$badge_types, 'printers' => $printers]);
     }
 
     /**
@@ -183,6 +185,34 @@ class BadgeController extends Controller
         $delegate_badge = BadgeType::where('name','Delegate')->first();
         $badges = Badge::where('event_id',$event_model->id)->where('badge_type_id','!=',$visitor_badge->id)->where('badge_type_id','!=',$delegate_badge->id)->where('is_printed',1)->orderBy('company_name','ASC')->get();
         return Excel::download(new BadgesExport($badges), $event_model->name.' Badges.xlsx');
+    }
+
+    public function advancedExport(Request $request, $event)
+    {
+        $event_model = Event::findOrFail($event);
+        $visitor_badge = BadgeType::where('name', 'Visitor')->first();
+        $delegate_badge = BadgeType::where('name', 'Delegate')->first();
+
+        $query = Badge::where('event_id', $event_model->id)
+            ->where('badge_type_id', '!=', $visitor_badge->id)
+            ->where('badge_type_id', '!=', $delegate_badge->id)
+            ->where('is_printed', 1);
+
+        if ($request->filled('badge_type')) {
+            $query->where('badge_type_id', $request->badge_type);
+        }
+
+        if ($request->filled('company_name')) {
+            $query->where('company_name', 'like', '%' . $request->company_name . '%');
+        }
+
+        if ($request->filled('printed_by')) {
+            $query->where('printed_by', $request->printed_by);
+        }
+
+        $badges = $query->orderBy('company_name', 'ASC')->get();
+
+        return Excel::download(new BadgesExport($badges), $event_model->name . ' Badges (Filtered).xlsx');
     }
 
     /**
