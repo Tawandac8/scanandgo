@@ -16,8 +16,17 @@
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
                     <a href="{{ route('exhibitor.badge.printed',$exhibitor->id) }}" class="badge badge-sm bg-gradient-warning">Printed</a>
-                    {{-- <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span> --}}
-
+                    
+                    @role('super-admin')
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm bg-gradient-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="bulkBadgeActionsBtn" disabled>
+                          Bulk Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="javascript:;" onclick="bulkDeleteBadges()">Delete Selected</a></li>
+                        </ul>
+                    </div>
+                    @endrole
                   </div>
                 </div>
               </div>
@@ -27,6 +36,9 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
+                      <th style="width: 40px;">
+                        <input type="checkbox" id="selectAllBadges" class="ms-3">
+                      </th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Badge Type</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Printed</th>
@@ -38,6 +50,9 @@
                     @if(isset($badges))
                     @foreach($badges as $badge)
                     <tr>
+                      <td>
+                        <input type="checkbox" class="badge-checkbox ms-3" value="{{ $badge->id }}">
+                      </td>
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
@@ -322,6 +337,66 @@
                     }
                 }
             });
+        }
+
+        // Bulk selection logic
+        $('#selectAllBadges').on('change', function() {
+            $('.badge-checkbox').prop('checked', this.checked);
+            updateBulkBadgeActionBtn();
+        });
+
+        $(document).on('change', '.badge-checkbox', function() {
+            updateBulkBadgeActionBtn();
+            if ($('.badge-checkbox:checked').length == $('.badge-checkbox').length) {
+                $('#selectAllBadges').prop('checked', true);
+            } else {
+                $('#selectAllBadges').prop('checked', false);
+            }
+        });
+
+        function updateBulkBadgeActionBtn() {
+            var selectedCount = $('.badge-checkbox:checked').length;
+            if (selectedCount > 0) {
+                $('#bulkBadgeActionsBtn').prop('disabled', false);
+                $('#bulkBadgeActionsBtn').text('Bulk Actions (' + selectedCount + ')');
+            } else {
+                $('#bulkBadgeActionsBtn').prop('disabled', true);
+                $('#bulkBadgeActionsBtn').text('Bulk Actions');
+            }
+        }
+
+        function bulkDeleteBadges() {
+            var selectedIds = [];
+            $('.badge-checkbox:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length === 0) return;
+
+            if (confirm('Are you sure you want to delete ' + selectedIds.length + ' badges? This action cannot be undone.')) {
+                $.ajax({
+                    url: "{{ route('exhibitor.badges.bulk.destroy') }}",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        ids: selectedIds
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message || 'Error occurred during bulk deletion');
+                        }
+                    },
+                    error: function(xhr) {
+                        var msg = 'An error occurred';
+                        if (xhr.status === 403) msg = 'Unauthorized action';
+                        alert(msg);
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
         }
         @endrole
 </script>

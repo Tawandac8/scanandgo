@@ -192,4 +192,20 @@ class ExhibitorBadgeController extends Controller
     {
         //
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        if (!auth()->user()->hasRole('super-admin')) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $ids = $request->ids;
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No badges selected'], 400);
+        }
+
+        ExhibitorBadge::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Selected badges deleted successfully']);
+    }
 }
