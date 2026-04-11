@@ -16,7 +16,7 @@
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
                     <a href="{{ route('exhibitor.badge.printed',$exhibitor->id) }}" class="badge badge-sm bg-gradient-warning">Printed</a>
-                    <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span>
+                    {{-- <span onclick="addBadge()" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Badge</span> --}}
 
                   </div>
                 </div>
