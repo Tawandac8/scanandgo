@@ -46,7 +46,6 @@ class ExhibitorBadgeController extends Controller
                     $exhibitor_badge_exists->is_printed = 1;
                     $exhibitor_badge_exists->printed_by = $exhibitor_badge['printed_by'];
                     $exhibitor_badge_exists->printed_date = $exhibitor_badge['printed_at'];
-
                 }
                 $exhibitor_badge_exists->save();
             }

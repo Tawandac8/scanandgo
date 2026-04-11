@@ -111,6 +111,12 @@ class ExhibitorController extends Controller
         foreach($exhibitors as $exhibitor){
             $output .= '<tr>
                       <td>
+                        <input type="checkbox" class="exhibitor-checkbox ms-3" value="'.$exhibitor->id.'">
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold"> '.$exhibitor->created_at.' </span>
+                      </td>
+                      <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">'.$exhibitor->company_name.'</h6>
@@ -120,7 +126,7 @@ class ExhibitorController extends Controller
                       <td>
                         <span class="text-xs font-weight-bold">  </span>
                       </td>
-                      <td class="align-middle text-center text-sm">
+                      <td>
                         <span class="text-xs font-weight-bold">  </span>
                       </td>
                       <td>
@@ -130,6 +136,22 @@ class ExhibitorController extends Controller
                     </tr>';
         }
         return $output;
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        if (!auth()->user()->hasRole('super-admin')) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $ids = $request->ids;
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No exhibitors selected'], 400);
+        }
+
+        Exhibitor::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Selected exhibitors deleted successfully']);
     }
 
     function printedBadges($event){

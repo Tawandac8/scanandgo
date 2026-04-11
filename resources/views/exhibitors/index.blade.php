@@ -22,6 +22,18 @@
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
                     <span onclick="" style="cursor: pointer" class="badge badge-sm bg-gradient-dark">Add Exhibitor</span>
+                    
+                    @role('super-admin')
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm bg-gradient-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="bulkActionsBtn" disabled>
+                          Bulk Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="javascript:;" onclick="bulkDelete()">Delete Selected</a></li>
+                        </ul>
+                    </div>
+                    @endrole
+
                     <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fa fa-ellipsis-v text-dark"></i>
                     </a>
@@ -39,6 +51,9 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
+                      <th style="width: 40px;">
+                        <input type="checkbox" id="selectAll" class="ms-3">
+                      </th>
                       @role('super-admin')
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exhibitor</th>
                       @endrole
@@ -55,6 +70,9 @@
                     @if(isset($exhibitors))
                     @foreach($exhibitors as $exhibitor)
                     <tr>
+                      <td>
+                        <input type="checkbox" class="exhibitor-checkbox ms-3" value="{{ $exhibitor->id }}">
+                      </td>
                       <td>
                         <span class="text-xs font-weight-bold"> {{ $exhibitor->created_at }} </span>
                       </td>
@@ -113,8 +131,70 @@
       data: {q:query},
       success: function (response) {
         $('.exhibitor-table').html(response);
+        updateBulkActionBtn();
       }
     });
   })
+
+  // Select all functionality
+  $('#selectAll').on('change', function() {
+    $('.exhibitor-checkbox').prop('checked', this.checked);
+    updateBulkActionBtn();
+  });
+
+  // Individual checkbox change
+  $(document).on('change', '.exhibitor-checkbox', function() {
+    updateBulkActionBtn();
+    if ($('.exhibitor-checkbox:checked').length == $('.exhibitor-checkbox').length) {
+      $('#selectAll').prop('checked', true);
+    } else {
+      $('#selectAll').prop('checked', false);
+    }
+  });
+
+  function updateBulkActionBtn() {
+    var selectedCount = $('.exhibitor-checkbox:checked').length;
+    if (selectedCount > 0) {
+      $('#bulkActionsBtn').prop('disabled', false);
+      $('#bulkActionsBtn').text('Bulk Actions (' + selectedCount + ')');
+    } else {
+      $('#bulkActionsBtn').prop('disabled', true);
+      $('#bulkActionsBtn').text('Bulk Actions');
+    }
+  }
+
+  function bulkDelete() {
+    var selectedIds = [];
+    $('.exhibitor-checkbox:checked').each(function() {
+      selectedIds.push($(this).val());
+    });
+
+    if (selectedIds.length === 0) return;
+
+    if (confirm('Are you sure you want to delete ' + selectedIds.length + ' exhibitors? This action cannot be undone.')) {
+      $.ajax({
+        url: "{{ route('exhibitors.bulk.destroy') }}",
+        type: 'POST',
+        data: {
+          _token: "{{ csrf_token() }}",
+          ids: selectedIds
+        },
+        success: function(response) {
+          if (response.success) {
+            alert(response.message);
+            location.reload();
+          } else {
+            alert(response.message || 'Error occurred during bulk deletion');
+          }
+        },
+        error: function(xhr) {
+          var msg = 'An error occurred';
+          if (xhr.status === 403) msg = 'Unauthorized action';
+          alert(msg);
+          console.error(xhr.responseText);
+        }
+      });
+    }
+  }
 </script>
 @endsection

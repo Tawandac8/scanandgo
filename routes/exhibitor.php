@@ -39,5 +39,6 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     Route::group(['middleware' => ['role:super-admin']], function () {
         Route::get('/exhibitor/badge/data/{badge}', [ExhibitorBadgeController::class, 'getBadgeData']);
         Route::post('/exhibitor/badge/update/{badge}', [ExhibitorBadgeController::class, 'updateBadgeData']);
+        Route::post('/exhibitors/bulk-destroy', [ExhibitorController::class, 'bulkDestroy'])->name('exhibitors.bulk.destroy');
     });
 });
