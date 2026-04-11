@@ -10,6 +10,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\ExportExhibitorBadges;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExhibitorBadgeController extends Controller
@@ -195,7 +196,7 @@ class ExhibitorBadgeController extends Controller
 
     public function bulkDestroy(Request $request)
     {
-        if (!auth()->user()->hasRole('super-admin')) {
+        if (!FacadesAuth::user()->hasRole('super-admin')) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
