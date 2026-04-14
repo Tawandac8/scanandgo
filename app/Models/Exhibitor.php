@@ -18,7 +18,11 @@ class Exhibitor extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function badges(){
-        return $this->hasMany(Badge::class);
+    public function exhibitor_badges(){
+        return $this->hasMany(ExhibitorBadge::class);
+    }
+
+    public function indirect_exhibitors(){
+        return $this->hasMany(IndirectExhibitor::class);
     }
 }

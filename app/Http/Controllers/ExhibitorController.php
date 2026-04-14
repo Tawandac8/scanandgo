@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class ExhibitorController extends Controller
 {
@@ -140,7 +141,7 @@ class ExhibitorController extends Controller
 
     public function bulkDestroy(Request $request)
     {
-        if (!auth()->user()->hasRole('super-admin')) {
+        if (!Auth::user()->hasRole('super-admin')) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 

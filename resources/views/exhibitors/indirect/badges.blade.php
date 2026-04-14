@@ -18,16 +18,6 @@
                     <a href="{{ route('exhibitor.indirect.index',$exhibitor->id) }}" class="badge badge-sm bg-gradient-dark">Indirect</a>
                     <a href="{{ route('exhibitor.badge.printed',$exhibitor->id) }}" class="badge badge-sm bg-gradient-warning">Printed</a>
                     
-                    @role('super-admin')
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm bg-gradient-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="bulkBadgeActionsBtn" disabled>
-                          Bulk Actions
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="javascript:;" onclick="bulkDeleteBadges()">Delete Selected</a></li>
-                        </ul>
-                    </div>
-                    @endrole
                   </div>
                 </div>
               </div>
@@ -93,7 +83,6 @@
             <div class="card-footer">
               <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4">
-                    {{ $badges->links('components.pagination') }}
                   </div>
                 </div>
             </div>
@@ -118,92 +107,10 @@
               <span onclick="" class="btn bg-gradient-primary">Print</span>
             </div>
           </div>
-          <div class="card add-exhibitor-badge">
-            <div class="card-body">
-                <form action="{{ route('exhibitor.badge.add',$exhibitor->id) }}" method="post">
-                    @csrf
-                <div class="mb-4">
-                    <label for="">Name</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
-                </div>
-                <div class="mb-4">
-                    <label for="">Badge Type</label>
-                    <select name="badge_type" id="" class="form-select">
-                        @foreach($types as $type)
-                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <button class="btn btn-dark w-100">Add Badge</button>
-                </form>
-            </div>
-          </div>
         </div>
 </div>
 
-<!-- Edit Badge Modal -->
-<div class="modal fade" id="editBadgeModal" tabindex="-1" role="dialog" aria-labelledby="editBadgeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editBadgeModalLabel">Edit Badge</h5>
-        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body text-start">
-        <form id="editBadgeForm">
-          <input type="hidden" id="edit_badge_id">
-          <div class="form-group mb-3">
-            <label for="edit_name">Name</label>
-            <input type="text" class="form-control" id="edit_name" required>
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_badge_type_id">Badge Type</label>
-            <select class="form-select" id="edit_badge_type_id" required>
-              @foreach($types as $type)
-                <option value="{{ $type->id }}">{{ $type->name }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_is_printed">Is Printed</label>
-            <select class="form-select" id="edit_is_printed">
-              <option value="0">No</option>
-              <option value="1">Yes</option>
-            </select>
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_printed_copies">Printed Copies</label>
-            <input type="number" class="form-control" id="edit_printed_copies" required>
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_serial_number">Serial Number</label>
-            <input type="text" class="form-control" id="edit_serial_number">
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_printed_by">Printed By</label>
-            <input type="text" class="form-control" id="edit_printed_by">
-          </div>
-          <div class="form-group mb-3">
-            <label for="edit_printed_date">Printed Date</label>
-            <input type="text" class="form-control" id="edit_printed_date">
-          </div>
-          <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="edit_printed_in_bulawayo">
-            <label class="form-check-label" for="edit_printed_in_bulawayo">
-              Printed in Bulawayo
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn bg-gradient-primary" onclick="updateBadge()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 @endsection
 
 @section('scripts')
@@ -239,7 +146,7 @@
 
         function viewBadge(id){
             $.ajax({
-                url: '/exhibitor/badge/'+id,
+                url: '/indirect-exhibitor/view-badge/'+id,
                 type: 'GET',
                 success: function(response) {
                     $('#badge-wrapper').html(response);
