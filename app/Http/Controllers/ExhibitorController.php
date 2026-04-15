@@ -126,10 +126,7 @@ class ExhibitorController extends Controller
                         </div>
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold">  </span>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">  </span>
+                        <span class="text-xs font-weight-bold"> '.$exhibitor->exhibitor_badges->count().' </span>
                       </td>
                       <td>
                         <a href="'.route('exhibitor.badge.export',$exhibitor->id) .'" class="badge badge-sm bg-gradient-success">Export Printed</a>

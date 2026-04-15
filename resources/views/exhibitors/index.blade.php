@@ -56,7 +56,6 @@
                       </th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Badges</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remaining Badges</th>
                       <th></th>
                     </tr>
                   </thead>
