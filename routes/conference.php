@@ -22,4 +22,6 @@ Route::group(['middleware' => ['role:admin|super-admin|badges-office']], functio
     Route::get('/delegates/printed/{event}',[SubEventController::class,'printed'])->name('delegates.printed');
     //update serial number
     Route::get('/admin/delegate-badge/serial-number/{id}',[SubEventController::class,'updateSerialNumber'])->name('update.delegate.serial.number');
+    //update badge name
+    Route::post('/delegates/badge/update-name',[SubEventController::class,'updateBadgeName'])->name('update.delegate.badge.name');
 });

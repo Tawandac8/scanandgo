@@ -98,7 +98,7 @@ Schedule::call(function(){
             } 
         }
     }
-})->everyTwoMinutes();
+})->everyMinute();
 
 // //Exhibitor Badges from skylon
 // Schedule::call(function(){

@@ -255,4 +255,15 @@ class SubEventController extends Controller
         $badges = Badge::where('sub_event_id',$event->id)->where('is_printed',1)->orderBy('name','asc')->get();
         return Excel::download(new BadgeExport($badges), $event->name.' '.$event->year.' '.'printed-delegates.xlsx');
     }
+
+    function updateBadgeName(Request $request){
+        $badge = Badge::where('id', $request->id)->first();
+        $badge->update([
+            'name' => $request->name
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Badge name updated successfully'
+        ]);
+    }
 }
