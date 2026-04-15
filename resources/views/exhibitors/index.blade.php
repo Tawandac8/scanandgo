@@ -54,13 +54,7 @@
                       <th style="width: 40px;">
                         <input type="checkbox" id="selectAll" class="ms-3">
                       </th>
-                      @role('super-admin')
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exhibitor</th>
-                      @endrole
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company Name</th>
-                      @role('super-admin')
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">exhibitor Code</th>
-                      @endrole
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Badges</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remaining Badges</th>
                       <th></th>
@@ -74,26 +68,14 @@
                         <input type="checkbox" class="exhibitor-checkbox ms-3" value="{{ $exhibitor->id }}">
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold"> {{ $exhibitor->created_at }} </span>
-                      </td>
-                      <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{ $exhibitor->company_name }}</h6>
                           </div>
                         </div>
                       </td>
-                      @role('super-admin')
                       <td>
-                        <span class="text-xs font-weight-bold"> {{ $exhibitor->code }} </span>
-                      </td>
-                      @endrole
-                      
-                      <td>
-                        <span class="text-xs font-weight-bold">  </span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">  </span>
+                        <span class="text-xs font-weight-bold"> {{ $exhibitor->exhibitor_badges->count() }} </span>
                       </td>
                       <td>
                         <a href="{{ route('exhibitor.badge.export',$exhibitor->id) }}" class="badge badge-sm bg-gradient-success">Export Printed</a>
