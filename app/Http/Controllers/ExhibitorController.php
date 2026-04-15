@@ -116,9 +116,6 @@ class ExhibitorController extends Controller
                         <input type="checkbox" class="exhibitor-checkbox ms-3" value="'.$exhibitor->id.'">
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold"> '.$exhibitor->created_at.' </span>
-                      </td>
-                      <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">'.$exhibitor->company_name.'</h6>
