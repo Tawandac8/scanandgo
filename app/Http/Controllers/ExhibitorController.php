@@ -105,7 +105,8 @@ class ExhibitorController extends Controller
     //search exhibitor
     public function search(Request $request){
         $q = $request->q;
-        $exhibitors = Exhibitor::where('company_name','like','%'.$q.'%')->paginate(25);
+        $event = Event::where('id',$request->event_id)->first();
+        $exhibitors = Exhibitor::where('event_code',$event->event_code)->where('company_name','like','%'.$q.'%')->paginate(25);
         
         $output = '';
 

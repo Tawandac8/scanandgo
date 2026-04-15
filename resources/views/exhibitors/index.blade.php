@@ -128,7 +128,7 @@
     $.ajax({
       type: "get",
       url: "/search/exhibitor",
-      data: {q:query},
+      data: {q:query, 'event_id':{{ $event->id }}},
       success: function (response) {
         $('.exhibitor-table').html(response);
         updateBulkActionBtn();
