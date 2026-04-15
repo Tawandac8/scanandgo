@@ -45,7 +45,7 @@
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ $badge->name }}</h6>
+                            <h6 class="mb-0 text-sm"><input type="text" value="{{ $badge->name }}" onchange="updateBadgeName({{ $badge->id }}, this.value)"></h6>
                           </div>
                         </div>
                       </td>
@@ -226,5 +226,23 @@
                 }
             });
         });
+
+        function updateBadgeName(id, name){
+            $.ajax({
+                url: '/delegates/badge/update-name',
+                type: 'POST',
+                data: {
+                    id: id,
+                    name: name,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log('Badge name updated');
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
 </script>
 @endsection
