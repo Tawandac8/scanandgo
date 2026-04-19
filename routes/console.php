@@ -19,88 +19,116 @@ Artisan::command('inspire', function () {
 
 //Visitors Badges
 Schedule::call(function () {
+    try {
         $events = Event::where('end_date','>=',Carbon::now()->format('Y-m-d'))->get();
+        $badge_type = BadgeType::where('name','Visitor')->first();
 
-        //$badges = VisitorBadge::where('event_id',$event->current_event_id)->where('online',0)->orderBy('created_at','asc')->paginate(30);
-        foreach($events as $event){
-            $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/badges/'.$event->event_code);
+        if (!$badge_type) {
+            Log::warning('[Schedule:VisitorBadges] BadgeType "Visitor" not found in DB. Skipping.');
+            return;
+        }
 
-            $badges = $response->json($key = 'data');
+        foreach ($events as $event) {
+            try {
+                $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/badges/'.$event->event_code);
 
-            $badge_type = BadgeType::where('name','Visitor')->first();
+                $badges = $response->json('data');
 
-            foreach($badges as $badge){
-                $badge_exists = Badge::where('reg_code',$badge['registration_code'])->first();
-                try{
-                if($badge['profile']){
-                    $company_name = isset($badge['profile']['company'])? $badge['profile']['company']['name'] : $badge['profile']['student']['school_name'];
-                    $position = isset($badge['profile']['company'])? $badge['profile']['company']['department'] : $badge['profile']['student']['level'];
-                    $city = isset($badge['profile']['city'])? $badge['profile']['city']['name'] : '';
-                    $country = isset($badge['profile']['country'])? $badge['profile']['country']['name'] : '';
-                }else{
-                    $company_name = $badge['company'];
-                    $position = $badge['position'];
-                    $city = $badge['city'];
-                    $country = $badge['country'];
+                if (!is_array($badges)) {
+                    Log::warning('[Schedule:VisitorBadges] API returned non-array data for event: '.$event->event_code.'. Status: '.$response->status());
+                    continue;
                 }
-                
-                if(!$badge_exists){
-                        Badge::create([
-                            'badge_type' => $badge_type->name,
-                            'badge_type_id' => $badge_type->id,
-                            'title' => ($badge['profile'])? $badge['profile']['title'] : $badge['title'],
-                            'first_name' => ($badge['profile'])? $badge['profile']['first_name'] : $badge['first_name'],
-                            'last_name' => ($badge['profile'])? $badge['profile']['last_name'] : $badge['last_name'],
-                            'company_name' => $company_name,
-                            'reg_code' => $badge['registration_code'],
-                            'event' => $event->name,
-                            'is_online_registration' => 1,
-                            'position' => $position,
-                            'event_id'=> $event->id,
-                            'mobile' => ($badge['profile'])? $badge['profile']['phone'] : $badge['phone'],
-                            'city' => $city,
-                            'country' => $country,
-                            'email' => ($badge['profile'])? $badge['profile']['user']['email'] : $badge['email']
-                        ]);
+
+                foreach ($badges as $badge) {
+                    try {
+                        $badge_exists = Badge::where('reg_code', $badge['registration_code'])->first();
+
+                        if ($badge['profile']) {
+                            $company_name = isset($badge['profile']['company']) ? $badge['profile']['company']['name'] : ($badge['profile']['student']['school_name'] ?? '');
+                            $position = isset($badge['profile']['company']) ? $badge['profile']['company']['department'] : ($badge['profile']['student']['level'] ?? '');
+                            $city = isset($badge['profile']['city']) ? $badge['profile']['city']['name'] : '';
+                            $country = isset($badge['profile']['country']) ? $badge['profile']['country']['name'] : '';
+                        } else {
+                            $company_name = $badge['company'] ?? '';
+                            $position = $badge['position'] ?? '';
+                            $city = $badge['city'] ?? '';
+                            $country = $badge['country'] ?? '';
+                        }
+
+                        if (!$badge_exists) {
+                            Badge::create([
+                                'badge_type'             => $badge_type->name,
+                                'badge_type_id'          => $badge_type->id,
+                                'title'                  => ($badge['profile']) ? $badge['profile']['title'] : $badge['title'],
+                                'first_name'             => ($badge['profile']) ? $badge['profile']['first_name'] : $badge['first_name'],
+                                'last_name'              => ($badge['profile']) ? $badge['profile']['last_name'] : $badge['last_name'],
+                                'company_name'           => $company_name,
+                                'reg_code'               => $badge['registration_code'],
+                                'event'                  => $event->name,
+                                'is_online_registration' => 1,
+                                'position'               => $position,
+                                'event_id'               => $event->id,
+                                'mobile'                 => ($badge['profile']) ? $badge['profile']['phone'] : $badge['phone'],
+                                'city'                   => $city,
+                                'country'                => $country,
+                                'email'                  => ($badge['profile']) ? $badge['profile']['user']['email'] : $badge['email'],
+                            ]);
+                        }
+                    } catch (Exception $e) {
+                        Log::error('[Schedule:VisitorBadges] Badge error: '.$e->getMessage());
                     }
-                }catch(Exception $e){
-                    
                 }
+            } catch (Exception $e) {
+                Log::error('[Schedule:VisitorBadges] Event loop error for '.$event->event_code.': '.$e->getMessage());
             }
         }
-        })->everyMinute();
+    } catch (Exception $e) {
+        Log::error('[Schedule:VisitorBadges] Fatal error: '.$e->getMessage());
+    }
+})->everyMinute();
 
 //Exhibitor Badges
-Schedule::call(function(){
-    $events = Event::all();
-
-    foreach ($events as $event) {
+Schedule::call(function () {
+    try {
+        $events = Event::all();
         $api_key = config('services.skylon.api_key');
-        $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitors/'.$event->event_code);
-        
-        $exhibitors = $response->json();
-        //loop through exhibitors
-        foreach($exhibitors as $exhibitor){
-            //check if exhibitor exists
-            $exhibitor_exists = Exhibitor::where('code',$exhibitor['exhibitor_code'])->first();
-            //if not, create exhibitor
-            try{
-            if(!$exhibitor_exists){
-                Exhibitor::create([
-                    'code' => $exhibitor['exhibitor_code'],
-                    'company_name' => $exhibitor['company_name'],
-                    'event_code' => $event->event_code
-                ]);
-                
-            }else{
-                $exhibitor_exists->update([
-                    'company_name' => $exhibitor['company_name']
-                ]);
-            }
-            }catch(Exception $e){
-                Log::info($e->getMessage());
+
+        foreach ($events as $event) {
+            try {
+                $response = Http::withoutVerifying()->withToken($api_key)->acceptJson()->get('https://www.myskylon.com/api/v1/exhibitors/'.$event->event_code);
+
+                $exhibitors = $response->json();
+
+                if (!is_array($exhibitors)) {
+                    Log::warning('[Schedule:ExhibitorBadges] API returned non-array response for event: '.$event->event_code.'. Status: '.$response->status());
+                    continue;
+                }
+
+                foreach ($exhibitors as $exhibitor) {
+                    try {
+                        $exhibitor_exists = Exhibitor::where('code', $exhibitor['exhibitor_code'])->first();
+
+                        if (!$exhibitor_exists) {
+                            Exhibitor::create([
+                                'code'         => $exhibitor['exhibitor_code'],
+                                'company_name' => $exhibitor['company_name'],
+                                'event_code'   => $event->event_code,
+                            ]);
+                        } else {
+                            $exhibitor_exists->update([
+                                'company_name' => $exhibitor['company_name'],
+                            ]);
+                        }
+                    } catch (Exception $e) {
+                        Log::error('[Schedule:ExhibitorBadges] Exhibitor error: '.$e->getMessage());
+                    }
+                }
+            } catch (Exception $e) {
+                Log::error('[Schedule:ExhibitorBadges] Event loop error for '.$event->event_code.': '.$e->getMessage());
             }
         }
+    } catch (Exception $e) {
+        Log::error('[Schedule:ExhibitorBadges] Fatal error: '.$e->getMessage());
     }
 })->everyMinute();
 
