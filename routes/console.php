@@ -84,6 +84,7 @@ Schedule::call(function(){
             //check if exhibitor exists
             $exhibitor_exists = Exhibitor::where('code',$exhibitor['exhibitor_code'])->first();
             //if not, create exhibitor
+            try{
             if(!$exhibitor_exists){
                 Exhibitor::create([
                     'code' => $exhibitor['exhibitor_code'],
@@ -95,7 +96,10 @@ Schedule::call(function(){
                 $exhibitor_exists->update([
                     'company_name' => $exhibitor['company_name']
                 ]);
-            } 
+            }
+            }catch(Exception $e){
+                Log::info($e->getMessage());
+            }
         }
     }
 })->everyMinute();
