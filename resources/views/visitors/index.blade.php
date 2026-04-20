@@ -53,6 +53,7 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Institution</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Position/Level</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Code</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Printed</th>
                       <th></th>
                     </tr>
@@ -73,6 +74,9 @@
                       </td>
                       <td class="align-middle text-center text-sm">
                         <span class="text-xs font-weight-bold"> {{ $visitor->position }} </span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold"> {{ $visitor->reg_code }} </span>
                       </td>
                       <td class="text-center">
                         @if(!$visitor->is_printed)

@@ -29,7 +29,7 @@ class VisitorController extends Controller
 
     function index($event){
         $event = Event::where('id',$event)->first();
-        
+
 
              $badge_type = BadgeType::where('name','Visitor')->first();
 
@@ -186,6 +186,9 @@ class VisitorController extends Controller
                       </td>
                       <td class="align-middle text-center text-sm">
                         <span class="text-xs font-weight-bold">'.$visitor->position.'</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold">'.$visitor->reg_code.'</span>
                       </td>
                       <td class="text-center">';
 
