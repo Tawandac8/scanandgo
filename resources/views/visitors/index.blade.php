@@ -113,7 +113,7 @@
               <span onclick="" class="btn bg-gradient-primary">Print</span>
             </div>
           </div>
-          {{-- <div id="add-visitor-wrapper" class="card">
+          <div id="add-visitor-wrapper" class="card">
             <div class="card-body pb-0">
               <h4 class="badge-name">Add Visitor</h4>
               <label class="required" for="">Receipt Number</label>
@@ -197,7 +197,7 @@
             <div class="card-footer">
               <span onclick="addVisitor()" class="btn bg-gradient-dark w-100">Add Visitor</span>
             </div>
-          </div> --}}
+          </div>
           <div id="edit-visitor-wrapper" class="card">
             <form action="" method="post">
               @csrf

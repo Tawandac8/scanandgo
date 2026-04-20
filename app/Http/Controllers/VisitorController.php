@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class VisitorController extends Controller
 {
@@ -27,6 +29,7 @@ class VisitorController extends Controller
 
     function index($event){
         $event = Event::where('id',$event)->first();
+        
 
              $badge_type = BadgeType::where('name','Visitor')->first();
 
