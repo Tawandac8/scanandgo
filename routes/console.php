@@ -19,25 +19,15 @@ Artisan::command('inspire', function () {
 
 //Visitors Badges
 Schedule::call(function () {
-    try {
         $events = Event::where('end_date','>=',Carbon::now()->format('Y-m-d'))->get();
         $badge_type = BadgeType::where('name','Visitor')->first();
 
-        if (!$badge_type) {
-            Log::warning('[Schedule:VisitorBadges] BadgeType "Visitor" not found in DB. Skipping.');
-            return;
-        }
-
         foreach ($events as $event) {
-            try {
                 $response = Http::withoutVerifying()->acceptJson()->get('https://www.zitfevents.com/api/v1/badges/'.$event->event_code);
 
                 $badges = $response->json('data');
 
-                if (!is_array($badges)) {
-                    Log::warning('[Schedule:VisitorBadges] API returned non-array data for event: '.$event->event_code.'. Status: '.$response->status());
-                    continue;
-                }
+                if (!is_array($badges)) continue;
 
                 foreach ($badges as $badge) {
                     try {
@@ -78,13 +68,7 @@ Schedule::call(function () {
                         Log::error('[Schedule:VisitorBadges] Badge error: '.$e->getMessage());
                     }
                 }
-            } catch (Exception $e) {
-                Log::error('[Schedule:VisitorBadges] Event loop error for '.$event->event_code.': '.$e->getMessage());
-            }
         }
-    } catch (Exception $e) {
-        Log::error('[Schedule:VisitorBadges] Fatal error: '.$e->getMessage());
-    }
 })->everyMinute();
 
 //Exhibitor Badges
