@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ExhibitorBadge;
 use App\Models\Badge;
+use App\Models\Event;
 use App\Models\SubEvent;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,13 @@ class APIController extends Controller
         $event = SubEvent::where('event_code', $event_code)->first();
         //get badges printed this year
         $badges = Badge::where('sub_event_id', $event->id)->where('is_printed', true)->get();
+        return response()->json($badges);
+    }
+
+    public function visitorBadges($event_code){
+        $event = Event::where('event_code', $event_code)->first();
+        $badges = Badge::where('event_id', $event->id)->where('badge_type', 'Visitor')->where('is_printed', true)->with('event')->get();
+
         return response()->json($badges);
     }
 }
