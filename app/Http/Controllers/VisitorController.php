@@ -168,7 +168,7 @@ class VisitorController extends Controller
     }
 
     function searchVisitorName(Request $request){
-        $visitors = Badge::where('first_name', 'like', '%'.$request->name.'%')->orWhere('last_name', 'like', '%'.$request->name.'%')->get();
+        $visitors = Badge::where('first_name', 'like', '%'.$request->name.'%')->orWhere('last_name', 'like', '%'.$request->name.'%')->orWhere('company_name', 'like', '%'.$request->name.'%')->get();
         
         $output = '';
 
@@ -200,7 +200,7 @@ class VisitorController extends Controller
 
                       $output .= '</td>
                       <td>
-                        
+                        <span style="cursor: pointer" onclick="viewVisitor('.$visitor->id.')" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></span>
                         <span style="cursor:pointer" onclick="editVisitor('.$visitor->id.')" class="badge badge-sm bg-gradient-warning">Edit Visitor</span>
                       </td>
                     </tr>';
