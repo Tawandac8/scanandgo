@@ -2,26 +2,78 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromGenerator;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Carbon\Carbon;
+use App\Models\Badge;
+use App\Models\ExhibitorBadge;
+use App\Models\IndirectExhibitorBadge;
 
-class AllPrintedBadgesExport implements FromCollection, WithHeadings, WithMapping
+class AllPrintedBadgesExport implements FromGenerator, WithHeadings
 {
-    protected $badges;
+    protected $event;
 
-    public function __construct($badges)
+    public function __construct($event)
     {
-        $this->badges = $badges;
+        $this->event = $event;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function generator(): \Generator
     {
-        return $this->badges;
+        $badges = Badge::where('event_id', $this->event->id)
+            ->where('is_printed', 1)
+            ->whereHas('badge_type', function($q) {
+                $q->where('name', '!=', 'Visitor');
+            })
+            ->with('badge_type')
+            ->cursor();
+
+        foreach ($badges as $item) {
+            yield [
+                $item->name,
+                $item->company_name,
+                $item->badge_type->name ?? '',
+                $item->reg_code,
+                $item->serial_number,
+                $item->printed_copies,
+                $item->printed_date ? Carbon::parse($item->printed_date)->format('d M Y') : '',
+                $item->printed_by,
+            ];
+        }
+
+        $exhibitor_badges = ExhibitorBadge::whereHas('exhibitor', function($q) {
+            $q->where('event_code', $this->event->event_code);
+        })->where('is_printed', 1)->with(['exhibitor', 'badge_type'])->cursor();
+
+        foreach ($exhibitor_badges as $item) {
+            yield [
+                $item->name,
+                $item->exhibitor->company_name ?? '',
+                $item->badge_type->name ?? '',
+                '',
+                $item->serial_number,
+                $item->printed_copies,
+                $item->printed_date ? Carbon::parse($item->printed_date)->format('d M Y') : '',
+                $item->printed_by,
+            ];
+        }
+
+        $indirect_exhibitor_badges = IndirectExhibitorBadge::whereHas('indirect_exhibitor.exhibitor', function($q) {
+            $q->where('event_code', $this->event->event_code);
+        })->where('is_printed', 1)->with(['indirect_exhibitor', 'badge_type'])->cursor();
+
+        foreach ($indirect_exhibitor_badges as $item) {
+            yield [
+                $item->name,
+                $item->indirect_exhibitor->company_name ?? '',
+                $item->badge_type->name ?? '',
+                '',
+                $item->serial_number,
+                $item->printed_count,
+                $item->printed_at ? Carbon::parse($item->printed_at)->format('d M Y') : '',
+                $item->printed_by,
+            ];
+        }
     }
 
     public function headings(): array
@@ -35,20 +87,6 @@ class AllPrintedBadgesExport implements FromCollection, WithHeadings, WithMappin
             'Printed Copies',
             'Printed Date',
             'Printed By',
-        ];
-    }
-
-    public function map($badge): array
-    {
-        return [
-            $badge->name,
-            $badge->company_name,
-            $badge->badge_type,
-            $badge->reg_code,
-            $badge->serial_number,
-            $badge->printed_copies,
-            $badge->printed_date ? Carbon::parse($badge->printed_date)->format('d M Y') : '',
-            $badge->printed_by,
         ];
     }
 }

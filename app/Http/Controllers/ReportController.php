@@ -85,59 +85,11 @@ class ReportController extends Controller
 
     public function exportAllBadges($event_id)
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+
         $event = Event::findOrFail($event_id);
 
-        $badges = Badge::where('event_id', $event->id)
-            ->where('is_printed', 1)
-            ->whereHas('badge_type', function($q) {
-                $q->where('name', '!=', 'Visitor');
-            })
-            ->with('badge_type')
-            ->get()->map(function($item) {
-            return (object) [
-                'name' => $item->name,
-                'company_name' => $item->company_name,
-                'badge_type' => $item->badge_type->name ?? '',
-                'reg_code' => $item->reg_code,
-                'serial_number' => $item->serial_number,
-                'printed_copies' => $item->printed_copies,
-                'printed_date' => $item->printed_date,
-                'printed_by' => $item->printed_by,
-            ];
-        });
-
-        $exhibitor_badges = ExhibitorBadge::whereHas('exhibitor', function($q) use ($event) {
-            $q->where('event_code', $event->event_code);
-        })->where('is_printed', 1)->with(['exhibitor', 'badge_type'])->get()->map(function($item) {
-            return (object) [
-                'name' => $item->name,
-                'company_name' => $item->exhibitor->company_name ?? '',
-                'badge_type' => $item->badge_type->name ?? '',
-                'reg_code' => '',
-                'serial_number' => $item->serial_number,
-                'printed_copies' => $item->printed_copies,
-                'printed_date' => $item->printed_date,
-                'printed_by' => $item->printed_by,
-            ];
-        });
-
-        $indirect_exhibitor_badges = IndirectExhibitorBadge::whereHas('indirect_exhibitor.exhibitor', function($q) use ($event) {
-            $q->where('event_code', $event->event_code);
-        })->where('is_printed', 1)->with(['indirect_exhibitor', 'badge_type'])->get()->map(function($item) {
-            return (object) [
-                'name' => $item->name,
-                'company_name' => $item->indirect_exhibitor->company_name ?? '',
-                'badge_type' => $item->badge_type->name ?? '',
-                'reg_code' => '',
-                'serial_number' => $item->serial_number,
-                'printed_copies' => $item->printed_count,
-                'printed_date' => $item->printed_at,
-                'printed_by' => $item->printed_by,
-            ];
-        });
-
-        $all_badges = $badges->merge($exhibitor_badges)->merge($indirect_exhibitor_badges);
-
-        return Excel::download(new AllPrintedBadgesExport($all_badges), 'all_printed_badges_'.$event->event_code.'.xlsx');
+        return Excel::download(new AllPrintedBadgesExport($event), 'all_printed_badges_'.$event->event_code.'.xlsx');
     }
 }
