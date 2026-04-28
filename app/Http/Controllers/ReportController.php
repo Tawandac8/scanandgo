@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use App\Models\BadgeType;
 use App\Models\Badge;
+use App\Models\ExhibitorBadge;
+use App\Models\IndirectExhibitorBadge;
+use App\Exports\AllPrintedBadgesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class ReportController extends Controller
@@ -77,5 +81,63 @@ class ReportController extends Controller
 
         return view('reports.report', ['event' => $event, 'badges' => $badges,'total_visitors'=>$total_visitors,'countries'=>$countries,'otherBadges'=>$all_other_badges]);
 
+    }
+
+    public function exportAllBadges($event_id)
+    {
+        $event = Event::findOrFail($event_id);
+
+        $badges = Badge::where('event_id', $event->id)
+            ->where('is_printed', 1)
+            ->whereHas('badge_type', function($q) {
+                $q->where('name', '!=', 'Visitor');
+            })
+            ->with('badge_type')
+            ->get()->map(function($item) {
+            return (object) [
+                'name' => $item->name,
+                'company_name' => $item->company_name,
+                'badge_type' => $item->badge_type->name ?? '',
+                'reg_code' => $item->reg_code,
+                'serial_number' => $item->serial_number,
+                'printed_copies' => $item->printed_copies,
+                'printed_date' => $item->printed_date,
+                'printed_by' => $item->printed_by,
+            ];
+        });
+
+        $exhibitor_badges = ExhibitorBadge::whereHas('exhibitor', function($q) use ($event) {
+            $q->where('event_code', $event->event_code);
+        })->where('is_printed', 1)->with(['exhibitor', 'badge_type'])->get()->map(function($item) {
+            return (object) [
+                'name' => $item->name,
+                'company_name' => $item->exhibitor->company_name ?? '',
+                'badge_type' => $item->badge_type->name ?? '',
+                'reg_code' => '',
+                'serial_number' => $item->serial_number,
+                'printed_copies' => $item->printed_copies,
+                'printed_date' => $item->printed_date,
+                'printed_by' => $item->printed_by,
+            ];
+        });
+
+        $indirect_exhibitor_badges = IndirectExhibitorBadge::whereHas('indirect_exhibitor.exhibitor', function($q) use ($event) {
+            $q->where('event_code', $event->event_code);
+        })->where('is_printed', 1)->with(['indirect_exhibitor', 'badge_type'])->get()->map(function($item) {
+            return (object) [
+                'name' => $item->name,
+                'company_name' => $item->indirect_exhibitor->company_name ?? '',
+                'badge_type' => $item->badge_type->name ?? '',
+                'reg_code' => '',
+                'serial_number' => $item->serial_number,
+                'printed_copies' => $item->printed_count,
+                'printed_date' => $item->printed_at,
+                'printed_by' => $item->printed_by,
+            ];
+        });
+
+        $all_badges = $badges->merge($exhibitor_badges)->merge($indirect_exhibitor_badges);
+
+        return Excel::download(new AllPrintedBadgesExport($all_badges), 'all_printed_badges_'.$event->event_code.'.xlsx');
     }
 }

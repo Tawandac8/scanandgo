@@ -44,6 +44,7 @@ All Events
                       </td>
                       <td>
                         <a href="{{ route('reports.report',$event->id) }}" class="badge badge-sm bg-gradient-info">Go <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="{{ route('reports.export_all_badges',$event->id) }}" class="badge badge-sm bg-gradient-success">Export Printed <i class="fa-solid fa-download"></i></a>
                         @role('super-admin')
                         {{-- <a href="{{ route('delete.event.visitors',$event->id) }}" class="badge badge-sm bg-gradient-danger">Delete <i class="fa-solid fa-arrow-right"></i></a> --}}
                         @endrole
